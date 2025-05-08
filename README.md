@@ -1,47 +1,61 @@
 # Image_processing_Bremand_Marques_A
-Projet C P1
 
-Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc créer une nouvelle branche 
-contenant le projet fonctionnel. 
+Projet C - P1 A - BREMAND Flavie et MARQUES Noémie
 
-*Fichier lena_gray.bmp, lena_color.bmp, barbara_gray.bmp* : Fichier pour exécuter le programme 
 
-*Fichier main.c* : Fichier principale de l'exécution du code. Auteures : Flavie Brémand et Noémie Marques
+# Remarques
 
-*Fichier menu.c et menu.h* : Fichier de gestion des fonctions utiles pour pour le fonctionnement du menu. Auteure : Flavie Brémand 
+Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc créé une nouvelle branche contenant le projet fonctionnel (master), puis finalement, nous avons créé un nouveau projet sur GitHub à cause de problèmes persistants.
 
-"Fichier ex_affichage.txt" : Affichage du menu de sélection pour visualiser le fonctionnement du menu principal. Auteure : Flavie Brémand
 
-*Fichier bmp8.c et bmp8.h* : Fichier contenant la première partie et la troisième partie du projet concernant les images en noir et blanc. Auteures : Flavie Brémand et Noémie Marques 
+# Liste des fichiers
 
-*Fichier filters_bmp8.c et filters_bmp8.h" : Fichier contenant les filtres et leurs noyaux de la première partie. Auteure: FLavie Brémand 
+*lena_gray.bmp*, *lena_color.bmp*, *barbara_gray.bmp*, *flowers_color.bmp* : Les 4 images du projet pour tester le programme 
 
-*Fichier bmp_constant.h* : Fichier de constantes pour la deuxième partie. Auteure : Noémie Marques 
+*main.c* : Fichier principal de l'exécution du code - BREMAND Flavie
 
-*Fichier t_bmp24.c et t_bmp24.h* : Fichier contenant la deuxième partie et la troisième partie du projet concernant les images en couleur. Auteures : Flavie Brémand et Noémie Marques 
+*menu.c* et *menu.h* : Fichiers de gestion des fonctions utiles pour pour le fonctionnement du menu - BREMAND Flavie
+
+*ex_affichage.txt* : Affichage du menu de sélection pour visualiser le fonctionnement des deux menus - BREMAND Flavie
+
+*bmp8.c* et *bmp8.h* : Fichiers contenant la *Partie 1* et la *Partie 3* du projet concernant les images en noir et blanc - BREMAND Flavie et MARQUES Noémie 
+
+*filters_bmp8.c* et *filters_bmp8.h" : Fichiers contenant les filtres et leurs noyaux de la *Partie 1* - BREMAND Flavie
+
+*bmp_constant.h* : Fichier de constantes pour la *Partie 2* - MARQUES Noémie 
+
+*t_bmp24.c* et *t_bmp24.h* : Fichiers contenant la *Partie 2* et la *Partie 3* du projet concernant les images en couleur - BREMAND Flavie et MARQUES Noémie
+
 
 # Carnet de bord 
 
-19 Mars : Initial commit et implémentation des images par Brémand Flavie 
+19/03/2025 - BREMAND Flavie : Initial commit
+                              Implémentation des images et création de l'arborescence
+                              Début de *main.c* et des *menu.c* et *menu.h*
 
-22 mars : Implémentation de la fonction loadImage et free par Marques Noémie 
+22/03/2025 - MARQUES Noémie : Implémentation de la fonction *loadImage* et *free*
 
-24 mars : Implémentation de la fonction SaveImage et finition du main 
+24/03/2025 - BREMAND Flavie : Implémentation de la fonction *saveImage* et finitions de *main.c* 
 
-11 avril : Implémentation de SaveImage
+13/04/2025 - MARQUES Noémie : Implémentation des types *t_bmp_header*, *t_bmp_info* et *t_pixel*. Puis implémentation des fonctions *loadImage*, *file_rawRead*, *file_rawWrite*
 
-13 avril : Implémentation des types t_bmp_header, t_bmp_info et t_pixel. Puis implémentation des fonctions loadImage, saveImage, file_rawRead, file_rawWrite par Marques Noémie 
+15/04/2025 - MARQUES Noémie : Implémentation des filtres *bmp24_boxBlur*, *gaussianBlur* et outline de la *Partie 2*
 
-15 avril : Implémentation des filtres bmp24_boxBlur, gaussianBlur et outline de la partie deux par Marques Noémie 
+18/04/2025 - BREMAND Flavie : Implémentation des filtres *applyFilter* et les noyaux des filtres de la *Partie 1*
+                              Fin de la *Partie 1* (il reste à la tester)
 
-19 avril : Implémentation des filtres emboss et sharpen de la partie 2 par Marques Noémie 
+19/04/2025 - MARQUES Noémie : Implémentation des filtres *emboss* et *sharpen* de la *Partie 2*
 
-23 avril : Implémentation des filtres applyFilter et les noyaux des filtres de la partie 1 (fin de la partie 1) 
+23/04/2025 - BREMAND Flavie : Fin de la *Partie 2* (il reste à la tester)
 
-24 avril : Amélioration de la lisibilité des filtres de la partie 2 par Marques Noémie 
+24/03/2025 - MARQUES Noémie : Amélioration de la lisibilité des filtres de la *Partie 2*
 
-25 avril : Test de la partie 1, problème interne à CLion donc la partie 1 n'est pas fonctionnel 
+24/03/2025 - BREMAND Flavie : Eclaircissement de *main.c*
 
-30 avril : Implémentation des prototypes des fonctions de la partie 3 par Marques Noémie 
+25/04/2025 : Test de la *Partie 1*, mais problème interne à CLion rendant les tests impossible à réaliser
 
-2 mai : Résolution du problème et création de la branche "master" 
+30/04/2025 - MARQUES Noémie : Implémentation des prototypes des fonctions de la *Partie 3*
+
+02/05/2025 - MARQUES Noémie : Essai de résolution du problème et création de la branche *master*
+
+08/05/2025 - BREMAND Flavie : A cause de problèmes persistants dûs à la configuration de CLion (sans solutions trouvées par nos professeurs de TD et le coordinateur du module), nouveau projet créé en copiant tous les fichiers et nouveau lien GitHub créé
