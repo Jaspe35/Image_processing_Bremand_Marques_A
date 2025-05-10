@@ -56,7 +56,12 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     memcpy(image->header, header, 54);
 
     // Lecture de la table des couleurs
-    fread(image->colorTable, sizeof(unsigned char), 54, file) ;
+    if (fread(image->colorTable, sizeof(unsigned char), 1024, file) != 1024){
+        printf("Erreur : La table de couleur ne peut pas être chargé\n");
+        free(image);
+        fclose(file);
+        return NULL;
+    }
 
     // Allocation mémoire pour l'image
     image->data = (unsigned char *)malloc(image->dataSize);
@@ -69,7 +74,12 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     }
 
     // Lecture des data
-    fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize ;
+    if (fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize) {
+        printf("Données non chargées\n");
+        free(image);
+        fclose(file);
+        return NULL;
+    };
 
     // Initialisation des champs de l'image
     image->width = width;
