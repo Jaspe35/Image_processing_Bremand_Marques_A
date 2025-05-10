@@ -20,7 +20,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         return NULL;
     }
     else {
-      printf("Charger avec succes !\n");
+        printf("Charger avec succes !\n");
 	}
 
     // lecture de l'en-tête
@@ -56,12 +56,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     memcpy(image->header, header, 54);
 
     // Lecture de la table des couleurs
-    if (fread(image->colorTable, sizeof(unsigned char), 1024, file) != 1024) {
-        printf("Erreur lors de la lecture de la table des couleurs");
-        free(image);
-        fclose(file);
-        return NULL;
-    }
+    fread(image->colorTable, sizeof(unsigned char), 54, file) ;
 
     // Allocation mémoire pour l'image
     image->data = (unsigned char *)malloc(image->dataSize);
@@ -74,13 +69,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     }
 
     // Lecture des data
-    if (fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize) {
-        printf("Erreur lors de la lecture des données de l'image");
-        free(image->data);
-        free(image);
-        fclose(file);
-        return NULL;
-    }
+    fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize ;
 
     // Initialisation des champs de l'image
     image->width = width;
@@ -95,32 +84,32 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 void bmp8_saveImage(const char * filename, t_bmp8 * image) {
       FILE *file = fopen(filename, "wb"); // Ouvrir le fichier en écriture binaire (car fichier .bmp)
       if (file == NULL) {
-        printf("Erreur d'ouverture du fichier\n");
-        return;
+          printf("Erreur d'ouverture du fichier\n");
+          return;
       }
 
       if (fwrite(image->header, sizeof(unsigned char), 54, file) != 54) { // En-tête BMP (54 octets)
-        printf("Erreur d'écriture de l'en-tête\n");
-        fclose(file);
-        return;
+          printf("Erreur d'écriture de l'en-tête\n");
+          fclose(file);
+          return;
       }
 
       if (fwrite(image->colorTable, sizeof(unsigned char), 1024, file) != 1024) { // Table de couleurs (1024 octets)
-        printf("Erreur d'écriture de la table de couleurs\n");
-        fclose(file);
-        return;
+          printf("Erreur d'écriture de la table de couleurs\n");
+          fclose(file);
+          return;
       }
 
       if (fwrite(image->data, sizeof(unsigned char), image->dataSize, file) != image->dataSize) { // Données de l'image (taille du tableau pointé par data)
-        printf("Erreur d'écriture des données de l'image\n");
-        fclose(file);
-        return;
+          printf("Erreur d'écriture des données de l'image\n");
+          fclose(file);
+          return;
       }
 
       fclose(file); // Fermer le fichier
       printf("Image sauvegardée avec succès dans %s\n", filename);
 
-    }
+}
 
 
 void bmp8_printInfo(t_bmp8 * img) {
