@@ -34,6 +34,7 @@ int main() {
                 scanf(" %s",filename);
                 filename[strcspn(filename, "\n")] = '\0'; // retirer \n en le remplaçant par \0, qui marque la fin d'une str
                 printf("Fichier \"%s\" loading... ",filename);
+                bmp8_negative(image);
                 image = bmp8_loadImage(filename);
                 break;
             }

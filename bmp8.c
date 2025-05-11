@@ -64,6 +64,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     }
 
     // Allocation mémoire pour l'image
+    image->data = malloc(dataSize); // pas image->dataSize ici
     image->data = (unsigned char *)malloc(image->dataSize);
     if (image->data == NULL) {
         printf("Erreur : Pixel non chargé\n");
