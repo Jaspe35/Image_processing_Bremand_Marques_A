@@ -14,8 +14,8 @@
 t_bmp8 * bmp8_loadImage(const char * filename) {
     FILE * file = fopen(filename, "rb");
     if (file == NULL) {
-        printf("Impossible de charger fichier\n");
-        printf(" %s\n",filename);
+        printf("Impossible de charger le fichier\n");
+        printf(" %s\n",filename); //debug
         fclose(file);
         return NULL;
     }

@@ -18,7 +18,7 @@
     }
     return 0;
 }*/
-// C:\Users\noemi\CLionProjects\projet_final\images\lena.bmp fichier pour noémie
+
 
 int main() {
     t_bmp8 * image = NULL;
@@ -32,10 +32,12 @@ int main() {
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
                 scanf(" %s",filename);
-                filename[strcspn(filename, "\n")] = '\0'; // retirer \n en le remplaçant par \0, qui marque la fin d'une str
-                printf("Fichier \"%s\" loading... ",filename);
-                bmp8_negative(image);
+                //fgets(filename, 50, stdin); // Saisie sécurisée pour filename (la taille de l'input ne pourra pas dépasser 49)
+                //filename[strcspn(filename, "\n")] = '\0'; // retirer \n en le remplaçant par \0, qui marque la fin d'une str
+                //printf("Fichier \"%s\" loading... ",filename);
                 image = bmp8_loadImage(filename);
+                bmp8_negative(image);
+                bmp8_saveImage(filename,image);
                 break;
             }
 
