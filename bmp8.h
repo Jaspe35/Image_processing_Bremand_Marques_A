@@ -41,7 +41,4 @@ void bmp8_equalize(t_bmp8 * img, unsigned int * hist_eq); // A faire 3.3.3
 
 // Ne pas oublier de changer le main pour que les égalisations d'histogramme soient disponibles.
 
-
-
-
 #endif //T_BMP8_H

@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 
 #include "bmp8.h"
-
 
 
 t_bmp8 * bmp8_loadImage(const char * filename) {
@@ -219,4 +219,85 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
     }
 
     free(newImg);
+}
+
+
+unsigned int * bmp8_computeHistogram(t_bmp8 * img) {
+    if (!img || !img->data) return NULL;
+
+    // Allocation dynamique du tableau de 256 entiers
+    unsigned int *hist = (unsigned int *)calloc(256, sizeof(unsigned int));
+    if (!hist) {
+        fprintf(stderr, "Erreur : échec de l'allocation de l'histogramme.\n");
+        return NULL;
+    }
+
+    // Remplissage de l'histogramme
+    for (unsigned int i = 0; i < img->dataSize; i++) {
+        unsigned char pixel = img->data[i];  // valeur entre 0 et 255
+        hist[pixel]++;
+    }
+
+    return hist;
+}
+
+
+unsigned int * bmp8_computeCDF(unsigned int * hist) {
+    if (!hist) return NULL;
+
+    unsigned int *cdf = (unsigned int *)malloc(256 * sizeof(unsigned int));
+    unsigned int *hist_eq = (unsigned int *)malloc(256 * sizeof(unsigned int));
+
+    if (!cdf || !hist_eq) {
+        fprintf(stderr, "Erreur : échec de l'allocation mémoire pour la CDF.\n");
+        free(cdf);
+        free(hist_eq);
+        return NULL;
+    }
+
+    // Étape 1 : calcul de la CDF
+    cdf[0] = hist[0];
+    for (int i = 1; i < 256; i++) {
+        cdf[i] = cdf[i - 1] + hist[i];
+    }
+
+    // Étape 2 : trouver cdfmin (la première valeur non nulle)
+    unsigned int cdfmin = 0;
+    for (int i = 0; i < 256; i++) {
+        if (cdf[i] != 0) {
+            cdfmin = cdf[i];
+            break;
+        }
+    }
+
+    // Étape 3 : normalisation
+    unsigned int total_pixels = cdf[255];
+    for (int i = 0; i < 256; i++) {
+        hist_eq[i] = round(((float)(cdf[i] - cdfmin) / (total_pixels - cdfmin)) * 255);
+    }
+
+    free(cdf); // On n’a plus besoin de la CDF brute
+    return hist_eq;
+}
+
+
+void bmp8_equalize(t_bmp8 * img) {
+    if (!img || !img->data) return;
+
+    // Calcul de l'histogramme
+    unsigned int *hist = bmp8_computeHistogram(img);
+    if (!hist) return;
+
+    // Calcul de l'histogramme égalisé (CDF normalisée)
+    unsigned int *hist_eq = bmp8_computeCDF(hist);
+    free(hist); // on peut libérer hist après utilisation
+
+    if (!hist_eq) return;
+
+    // Application de l'égalisation
+    for (unsigned int i = 0; i < img->dataSize; i++) {
+        img->data[i] = (unsigned char)hist_eq[img->data[i]];
+    }
+
+    free(hist_eq);
 }
