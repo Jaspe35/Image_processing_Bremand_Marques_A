@@ -37,7 +37,7 @@ unsigned int * bmp8_computeHistogram(t_bmp8 * img); // A faire 3.3.1
 
 unsigned int * bmp8_computeCDF(unsigned int * hist); // A faire 3.3.2
 
-void bmp8_equalize(t_bmp8 * img, unsigned int * hist_eq); // A faire 3.3.3
+void bmp8_equalize(t_bmp8 * img) ; // A faire 3.3.3
 
 // Ne pas oublier de changer le main pour que les égalisations d'histogramme soient disponibles.
 

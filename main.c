@@ -9,7 +9,6 @@
 #include "bmp8.h"
 #include "filters_bmp8.h"
 #include "t_bmp24.h"
-#include "bmp_constant.h"
 
 
 int verif_img_null_8(t_bmp8 *image) { // Fonction de vérification: image vide?
