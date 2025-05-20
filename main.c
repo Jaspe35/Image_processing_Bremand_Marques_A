@@ -140,7 +140,6 @@ int main() {
                             bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
-                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
                             bmp24_boxBlur(image24);
                             bmp24_saveImage(image24, filename);
                         }
@@ -155,7 +154,6 @@ int main() {
                             bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
-                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
                             bmp24_gaussianBlur(image24);
                             bmp24_saveImage(image24, filename);
                         }
@@ -170,8 +168,7 @@ int main() {
                             bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
-                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
-                            bmp24_sharpen(image24);
+                            //bmp24_sharpen(image24);
                             bmp24_saveImage(image24, filename);
                         }
                         break;
@@ -185,7 +182,6 @@ int main() {
                             bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
-                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
                             bmp24_outline(image24);
                             bmp24_saveImage(image24, filename);
                         }
@@ -200,7 +196,6 @@ int main() {
                             bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
-                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
                             bmp24_emboss(image24);
                             bmp24_saveImage(image24, filename);
                         }
@@ -217,13 +212,29 @@ int main() {
             }
 
             case 4:{ // Affichage des infos de l'image
-                if (verif_img_null_8(image8)) break;
-
-                bmp8_printInfo(image8);
+                if (type==8) {
+                    if (verif_img_null_8(image8)) break;
+                    bmp8_printInfo(image8);
+                }
+                else if (type==24) {
+                    printf("L'affichage des infos d'une image en couleur n'est pas prevu ici.");
+                }
                 break;
             }
 
-            case 5:{ // Quitter
+            case 5:{ // Egalisation d'histogramme
+                if (type==8) {
+                    bmp8_equalize(image8);
+                    bmp8_saveImage(filename, image8);
+                }
+                else if (type==24) {
+                    bmp24_equalize(image24);
+                    bmp24_saveImage(image24, filename);
+                }
+                break;
+            }
+
+            case 6:{ // Quitter
                 image_processing = 0;
                 break;
             }

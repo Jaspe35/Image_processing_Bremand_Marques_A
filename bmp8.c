@@ -15,13 +15,11 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     FILE * file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Impossible de charger le fichier\n");
-        printf(" %s\n",filename); //debug
+        printf("%s\n",filename); //debug
         fclose(file);
         return NULL;
     }
-    else {
-        printf("Charger avec succes !\n");
-	}
+    printf("Charger avec succes !\n");
 
     // lecture de l'en-tête
     unsigned char header[54];
@@ -136,8 +134,8 @@ void bmp8_free(t_bmp8 * img) {
 }
 
 void bmp8_negative(t_bmp8 * img) {
-    for (int i = 0; i < img->height; i++) {
-        for (int j = 0; j < img->width; j++) {
+    for (unsigned int i = 0; i < img->height; i++) {
+        for (unsigned int j = 0; j < img->width; j++) {
             unsigned int index = i * img->width + j;   // utilisation de la variable index pour simuler un tableau 2D
             img->data[index] = 255 - img->data[index];  //(car data est en réalité un tableau 1D)
         }
@@ -145,8 +143,8 @@ void bmp8_negative(t_bmp8 * img) {
 }
 
 void bmp8_brightness(t_bmp8 * img, int value) {
-    for (int i = 0; i < img->height; i++) {
-        for (int j = 0; j < img->width; j++) {
+    for (unsigned int i = 0; i < img->height; i++) {
+        for (unsigned int j = 0; j < img->width; j++) {
             unsigned int index = i * img->width + j;
             int result = img->data[index] + value;
             if (result > 255) {
@@ -162,8 +160,8 @@ void bmp8_brightness(t_bmp8 * img, int value) {
 
 
 void bmp8_threshold(t_bmp8 * img, int threshold) {
-  for (int i = 0; i < img->height; i++) {
-    for (int j = 0; j < img->width; j++) {
+  for (unsigned int i = 0; i < img->height; i++) {
+    for (unsigned int j = 0; j < img->width; j++) {
       unsigned int index = i * img->width + j;
       if (img->data[index] >= threshold) {
         img->data[index] = 255;
@@ -185,15 +183,15 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
         printf("Erreur : allocation memoire pour le filtre\n");
         return;
     }
-    for (int i = 0; i < img->height; i++) {
-        for (int j = 0; j < img->width; j++) {
+    for (unsigned int i = 0; i < img->height; i++) {
+        for (unsigned int j = 0; j < img->width; j++) {
             newImg[i * img->width + j] = img->data[i * img->width + j];
         }
     }
 
     // Convolution
-    for (int i = offset; i < img->height - offset; i++) {
-        for (int j = offset; j < img->width - offset; j++) {
+    for (unsigned int i = offset; i < img->height - offset; i++) {
+        for (unsigned int j = offset; j < img->width - offset; j++) {
             float sum = 0;
             for (int ki = -offset; ki <= offset; ki++) {
                 for (int kj = -offset; kj <= offset; kj++) {
@@ -214,7 +212,7 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
     }
 
     // Remplacement des anciennes données
-    for (int i = 0; i < img->dataSize; i++) {
+    for (unsigned int i = 0; i < img->dataSize; i++) {
         img->data[i] = newImg[i];
     }
 
@@ -226,9 +224,9 @@ unsigned int * bmp8_computeHistogram(t_bmp8 * img) {
     if (!img || !img->data) return NULL;
 
     // Allocation dynamique du tableau de 256 entiers
-    unsigned int *hist = (unsigned int *)calloc(256, sizeof(unsigned int));
+    unsigned int *hist = calloc(256, sizeof(int));
     if (!hist) {
-        fprintf(stderr, "Erreur : échec de l'allocation de l'histogramme.\n");
+        printf("Erreur : echec de l'allocation de l'histogramme.\n");
         return NULL;
     }
 
@@ -245,11 +243,11 @@ unsigned int * bmp8_computeHistogram(t_bmp8 * img) {
 unsigned int * bmp8_computeCDF(unsigned int * hist) {
     if (!hist) return NULL;
 
-    unsigned int *cdf = (unsigned int *)malloc(256 * sizeof(unsigned int));
-    unsigned int *hist_eq = (unsigned int *)malloc(256 * sizeof(unsigned int));
+    unsigned int *cdf = malloc(256 * sizeof(unsigned int));
+    unsigned int *hist_eq = malloc(256 * sizeof(unsigned int));
 
     if (!cdf || !hist_eq) {
-        fprintf(stderr, "Erreur : échec de l'allocation mémoire pour la CDF.\n");
+        fprintf(stderr, "Erreur : echec de l'allocation memoire pour la CDF.\n");
         free(cdf);
         free(hist_eq);
         return NULL;
@@ -299,5 +297,6 @@ void bmp8_equalize(t_bmp8 * img) {
         img->data[i] = (unsigned char)hist_eq[img->data[i]];
     }
 
+    printf("Egalisation appliquee avec succes !\n");
     free(hist_eq);
 }

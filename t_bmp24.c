@@ -565,5 +565,7 @@ void bmp24_equalize(t_bmp24 * img) {
             cpt++;
         }
     }
+
+    printf("Égalisation appliquée avec succès !\n");
     free(data);
 }

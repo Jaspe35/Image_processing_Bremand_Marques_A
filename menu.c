@@ -7,8 +7,8 @@
 
 int type_img() {
     printf("Veuillez choisir une option :\n");
-    printf("8. bmp8 (Images en nuances de gris)\n");
-    printf("24. bmp24 (Images en couleurs)\n");
+    printf("\t8. bmp8 (Images en nuances de gris)\n");
+    printf("\t24. bmp24 (Images en couleurs)\n");
 
     int type;
     scanf("%d",&type);
@@ -26,15 +26,16 @@ int menu() {
     int option=0;
 
     printf("Veuillez choisir une option :\n");
-    printf("1. Ouvrir une image\n");
-    printf("2. Sauvegarder une image\n");
-    printf("3. Appliquer un filtre\n");
-    printf("4. Afficher les informations de l'image\n");
-    printf("5. Quitter\n");
+    printf("\t1. Ouvrir une image\n");
+    printf("\t2. Sauvegarder une image\n");
+    printf("\t3. Appliquer un filtre\n");
+    printf("\t4. Afficher les informations de l'image\n");
+    printf("\t5. Egalisation d'histogramme\n");
+    printf("\t6. Quitter\n");
 
     scanf("%d",&option);
-    while (option<1 || option>5) {
-      printf("Veuillez choisir une option valide (entre 1 et 5) :\n");
+    while (option<1 || option>6) {
+      printf("Veuillez choisir une option valide (entre 1 et 6) :\n");
       scanf("%d",&option);
     }
     printf(">>> Votre choix : %d\n",option);
@@ -47,15 +48,15 @@ int menu_3() {
 
     // Menu de tous les filtres possibles:
     printf("Veuillez choisir un filtre :\n");
-    printf("1. Negatif\n");
-    printf("2. Luminosite\n");
-    printf("3. Binarisation (bmp8)/Conversion en gris (bmp24)\n");
-    printf("4. Flou\n");
-    printf("5. Flou gaussien\n");
-    printf("6. Nettete\n");
-    printf("7. Contours\n");
-    printf("8. Relief\n");
-    printf("9. Retourner au menu precedent\n");
+    printf("\t1. Negatif\n");
+    printf("\t2. Luminosite\n");
+    printf("\t3. Binarisation (bmp8)/Conversion en gris (bmp24)\n");
+    printf("\t4. Flou\n");
+    printf("\t5. Flou gaussien\n");
+    printf("\t6. Nettete\n");
+    printf("\t7. Contours\n");
+    printf("\t8. Relief\n");
+    printf("\t9. Retourner au menu precedent\n");
 
     scanf("%d",&option_3);
     while (option_3<1 || option_3>9) {
