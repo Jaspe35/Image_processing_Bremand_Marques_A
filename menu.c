@@ -7,8 +7,8 @@
 
 int type_img() {
     printf("Veuillez choisir une option :\n");
-    printf("8. bmp8 (gris)\n");
-    printf("24. bmp24 (couleurs)\n");
+    printf("8. bmp8 (Images en nuances de gris)\n");
+    printf("24. bmp24 (Images en couleurs)\n");
 
     int type;
     scanf("%d",&type);
