@@ -47,7 +47,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     // Allocation de l'image
     t_bmp8 *image = malloc(sizeof(t_bmp8)); // Allocation mémoire
         if (image == NULL) {
-            printf("Erreur : Allocation mémoire impossible\n");
+            printf("Erreur : Allocation memoire impossible\n");
             fclose(file);
             return NULL;
         }
@@ -57,7 +57,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Lecture de la table des couleurs
     if (fread(image->colorTable, sizeof(unsigned char), 1024, file) != 1024){
-        printf("Erreur : La table de couleur ne peut pas être chargé\n");
+        printf("Erreur : La table de couleur ne peut pas etre chargee\n");
         free(image);
         fclose(file);
         return NULL;
@@ -67,16 +67,16 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     image->data = malloc(dataSize); // pas image->dataSize ici
     image->data = (unsigned char *)malloc(image->dataSize);
     if (image->data == NULL) {
-        printf("Erreur : Pixel non chargé\n");
+        printf("Erreur : Pixel non charge\n");
         free(image);
         fclose(file);
         return NULL;
 
     }
 
-    // Lecture des data
+    // Lecture des datas
     if (fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize) {
-        printf("Données non chargées\n");
+        printf("Donnees non chargees\n");
         free(image);
         fclose(file);
         return NULL;
@@ -100,31 +100,31 @@ void bmp8_saveImage(const char * filename, t_bmp8 * image) {
       }
 
       if (fwrite(image->header, sizeof(unsigned char), 54, file) != 54) { // En-tête BMP (54 octets)
-          printf("Erreur d'écriture de l'en-tête\n");
+          printf("Erreur d'ecriture de l'en-tete\n");
           fclose(file);
           return;
       }
 
       if (fwrite(image->colorTable, sizeof(unsigned char), 1024, file) != 1024) { // Table de couleurs (1024 octets)
-          printf("Erreur d'écriture de la table de couleurs\n");
+          printf("Erreur d'ecriture de la table de couleurs\n");
           fclose(file);
           return;
       }
 
       if (fwrite(image->data, sizeof(unsigned char), image->dataSize, file) != image->dataSize) { // Données de l'image (taille du tableau pointé par data)
-          printf("Erreur d'écriture des données de l'image\n");
+          printf("Erreur d'ecriture des donnees de l'image\n");
           fclose(file);
           return;
       }
 
       fclose(file); // Fermer le fichier
-      printf("Image sauvegardée avec succès dans %s\n", filename);
+      printf("Image sauvegardee avec succes dans %s\n", filename);
 
 }
 
 
 void bmp8_printInfo(t_bmp8 * img) {
-  printf("Info de l'image chargée : \n");
+  printf("Info de l'image chargee : \n");
   printf("\tWidth : %d \n", img->width);
   printf("\tHeight : %d \n", img->height);
   printf("\tColor Depth : %d \n", img->colorDepth);
@@ -182,7 +182,7 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
     // Création d'une copie de l'image initiale
     unsigned char *newImg = (unsigned char *)malloc(img->dataSize);
     if (newImg == NULL) {
-        printf("Erreur : allocation mémoire pour le filtre\n");
+        printf("Erreur : allocation memoire pour le filtre\n");
         return;
     }
     for (int i = 0; i < img->height; i++) {

@@ -4,54 +4,48 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "menu.h"
 #include "bmp8.h"
 #include "filters_bmp8.h"
 
 
-/*int verif_img_null(t_bmp8 *image) { // Fonction de vérification: image vide?
+int verif_img_null(t_bmp8 *image) { // Fonction de vérification: image vide?
     if (image == NULL) {
-        printf("Aucune image chargée.\n");
+        printf("Aucune image chargee.\n");
         return 1;
     }
     return 0;
-}*/
+}
 
 
 int main() {
+    int image_processing = 1;
     t_bmp8 * image = NULL;
     char * filename = malloc(50*sizeof(char));
 
-    int option_choisie; // Fonction du menu principal
-    do {
-        option_choisie = menu();
+    while (image_processing) {
+        int option_choisie = menu(); // Fonction du menu principal
         switch (option_choisie){
 
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
                 scanf(" %s",filename);
-                //fgets(filename, 50, stdin); // Saisie sécurisée pour filename (la taille de l'input ne pourra pas dépasser 49)
-                //filename[strcspn(filename, "\n")] = '\0'; // retirer \n en le remplaçant par \0, qui marque la fin d'une str
-                //printf("Fichier \"%s\" loading... ",filename);
                 image = bmp8_loadImage(filename);
-                bmp8_negative(image);
                 bmp8_saveImage(filename,image);
                 break;
             }
 
             case 2:{ // Sauvegarder l'image
-                //if (verif_img_null(image)) break;
+                if (verif_img_null(image)) break;
                 printf("Chemin du fichier : ");
-                fgets(filename, 50, stdin);  // Saisie sécurisée pour filename (la taille de l'input ne pourra pas dépasser 49)
-                filename[strcspn(filename, "\n")] = '\0'; // retirer \n en le remplaçant par \0, qui marque la fin d'une str
+                scanf(" %s",filename);
                 bmp8_saveImage(filename, image);
                 break;
             }
 
             case 3:{ // Appliquer un filtre
-                //if (verif_img_null(image)) break;
+                if (verif_img_null(image)) break;
 
                 int option_3=menu_3(); // Fonction du menu résultant au 3 du menu principal
                 float **kernel = NULL;
@@ -60,6 +54,7 @@ int main() {
 
                     case 1: { // Négatif
                         bmp8_negative(image);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -71,6 +66,7 @@ int main() {
                         } while (val < -255 || val > 255);
 
                         bmp8_brightness(image, val);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -82,6 +78,7 @@ int main() {
                         } while (seuil<0 || seuil>255);
 
                         bmp8_threshold(image, seuil);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -89,6 +86,7 @@ int main() {
                         kernel = create_box_blur_kernel();
                         bmp8_applyFilter(image, kernel, 3);
                         free_kernel(kernel, 3);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -96,6 +94,7 @@ int main() {
                         kernel = create_gaussian_blur_kernel();
                         bmp8_applyFilter(image, kernel, 3);
                         free_kernel(kernel, 3);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -103,6 +102,7 @@ int main() {
                         kernel = create_sharpen_kernel();
                         bmp8_applyFilter(image, kernel, 3);
                         free_kernel(kernel, 3);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -110,6 +110,7 @@ int main() {
                         kernel = create_outline_kernel();
                         bmp8_applyFilter(image, kernel, 3);
                         free_kernel(kernel, 3);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -117,6 +118,7 @@ int main() {
                         kernel = create_emboss_kernel();
                         bmp8_applyFilter(image, kernel, 3);
                         free_kernel(kernel, 3);
+                        bmp8_saveImage(filename, image);
                         break;
                     }
 
@@ -130,17 +132,21 @@ int main() {
             }
 
             case 4:{ // Affichage des infos de l'image
-                //if (verif_img_null(image)) break;
+                if (verif_img_null(image)) break;
 
                 bmp8_printInfo(image);
+                break;
+            }
+
+            case 5:{ // Quitter
+                image_processing = 0;
                 break;
             }
 
             default : printf("Erreur dans la saisie de l'option choisie");
         }
 
-    } while (option_choisie != 5); // Quitter
-
+    }
 
     // Libérations finales
     if (filename != NULL)

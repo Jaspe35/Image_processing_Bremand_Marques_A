@@ -30,15 +30,15 @@ int menu_3(){
 
     // Menu de tous les filtres possibles:
     printf("Veuillez choisir un filtre :\n");
-    printf("1. Négatif\n");
-    printf("2. Luminosité\n");
+    printf("1. Negatif\n");
+    printf("2. Luminosite\n");
     printf("3. Binarisation\n");
     printf("4. Flou\n");
     printf("5. Flou gaussien\n");
-    printf("6. Netteté\n");
+    printf("6. Nettete\n");
     printf("7. Contours\n");
     printf("8. Relief\n");
-    printf("9. Retourner au menu précédent\n");
+    printf("9. Retourner au menu precedent\n");
 
     scanf("%d",&option_3);
     while (option_3<1 || option_3>9){
