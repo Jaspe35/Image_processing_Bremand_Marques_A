@@ -5,6 +5,7 @@
 #ifndef MENU_H
 #define MENU_H
 
+int type_img();
 int menu();
 int menu_3();
 

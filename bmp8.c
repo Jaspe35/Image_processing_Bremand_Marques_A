@@ -33,7 +33,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Vérification de l'image (8 bits)
     if (header[28] != 8) {
-        printf ("L'image n'est pas en niveau de gris");
+        printf ("L'image n'est pas en niveau de gris\n");
        fclose(file);
         return NULL;
     }

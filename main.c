@@ -8,9 +8,19 @@
 #include "menu.h"
 #include "bmp8.h"
 #include "filters_bmp8.h"
+#include "t_bmp24.h"
+#include "bmp_constant.h"
 
 
-int verif_img_null(t_bmp8 *image) { // Fonction de vérification: image vide?
+int verif_img_null_8(t_bmp8 *image) { // Fonction de vérification: image vide?
+    if (image == NULL) {
+        printf("Aucune image chargee.\n");
+        return 1;
+    }
+    return 0;
+}
+
+int verif_img_null_24(t_bmp24 *image) { // Fonction de vérification: image vide?
     if (image == NULL) {
         printf("Aucune image chargee.\n");
         return 1;
@@ -21,8 +31,11 @@ int verif_img_null(t_bmp8 *image) { // Fonction de vérification: image vide?
 
 int main() {
     int image_processing = 1;
-    t_bmp8 * image = NULL;
     char * filename = malloc(50*sizeof(char));
+
+    int type = type_img(); // Fonction pour savoir si l'on va travailler avec une image grise ou en couleurs
+    t_bmp8 * image8 = NULL;
+    t_bmp24 * image24 = NULL;
 
     while (image_processing) {
         int option_choisie = menu(); // Fonction du menu principal
@@ -31,21 +44,41 @@ int main() {
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
                 scanf(" %s",filename);
-                image = bmp8_loadImage(filename);
-                bmp8_saveImage(filename,image);
+                if (type==8) {
+                    image8 = bmp8_loadImage(filename);
+                    bmp8_saveImage(filename,image8);
+                }
+                else if (type==24) {
+                    image24 = bmp24_loadImage(filename);
+                    bmp24_saveImage(image24,filename);
+                }
                 break;
             }
 
             case 2:{ // Sauvegarder l'image
-                if (verif_img_null(image)) break;
-                printf("Chemin du fichier : ");
-                scanf(" %s",filename);
-                bmp8_saveImage(filename, image);
+                if (type==8) {
+                    if (verif_img_null_8(image8)) break;
+                    printf("Chemin du fichier : ");
+                    scanf(" %s",filename);
+                    bmp8_saveImage(filename, image8);
+                }
+                else if (type==24) {
+                    if (verif_img_null_24(image24)) break;
+                    printf("Chemin du fichier : ");
+                    scanf(" %s",filename);
+                    bmp24_saveImage(image24,filename);
+                }
+
                 break;
             }
 
             case 3:{ // Appliquer un filtre
-                if (verif_img_null(image)) break;
+                if (type==8) {
+                    if (verif_img_null_8(image8)) break;
+                }
+                else if (type==24) {
+                    if (verif_img_null_24(image24)) break;
+                }
 
                 int option_3=menu_3(); // Fonction du menu résultant au 3 du menu principal
                 float **kernel = NULL;
@@ -53,8 +86,14 @@ int main() {
                 switch (option_3) {
 
                     case 1: { // Négatif
-                        bmp8_negative(image);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            bmp8_negative(image8);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            bmp24_negative(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
@@ -65,60 +104,107 @@ int main() {
                             scanf("%d", &val);
                         } while (val < -255 || val > 255);
 
-                        bmp8_brightness(image, val);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            bmp8_brightness(image8, val);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            bmp24_brightness(image24, val);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
-                    case 3: { // Binarisation
-                        int seuil;
-                        do {
-                            printf("Seuil (0-255) : ");
-                            scanf("%d", &seuil);
-                        } while (seuil<0 || seuil>255);
+                    case 3: { // Binarisation (bmp8) / Conversion en gris (bmp24)
+                        if (type==8) {
+                            int seuil;
+                            do {
+                                printf("Seuil (0-255) : ");
+                                scanf("%d", &seuil);
+                            } while (seuil<0 || seuil>255);
 
-                        bmp8_threshold(image, seuil);
-                        bmp8_saveImage(filename, image);
+                            bmp8_threshold(image8, seuil);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            bmp24_grayscale(image24);
+                            bmp24_saveImage(image24,filename);
+                        }
                         break;
                     }
 
                     case 4: { // Flou (Box blur kernel)
-                        kernel = create_box_blur_kernel();
-                        bmp8_applyFilter(image, kernel, 3);
-                        free_kernel(kernel, 3);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            kernel = create_box_blur_kernel();
+                            bmp8_applyFilter(image8, kernel, 3);
+                            free_kernel(kernel, 3);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
+                            bmp24_boxBlur(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
                     case 5: { // Flou gaussien (Gaussian blur)
-                        kernel = create_gaussian_blur_kernel();
-                        bmp8_applyFilter(image, kernel, 3);
-                        free_kernel(kernel, 3);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            kernel = create_gaussian_blur_kernel();
+                            bmp8_applyFilter(image8, kernel, 3);
+                            free_kernel(kernel, 3);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
+                            bmp24_gaussianBlur(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
                     case 6: { // Netteté (Sharpen)
-                        kernel = create_sharpen_kernel();
-                        bmp8_applyFilter(image, kernel, 3);
-                        free_kernel(kernel, 3);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            kernel = create_sharpen_kernel();
+                            bmp8_applyFilter(image8, kernel, 3);
+                            free_kernel(kernel, 3);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
+                            bmp24_sharpen(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
                     case 7: { // Contours (Outline)
-                        kernel = create_outline_kernel();
-                        bmp8_applyFilter(image, kernel, 3);
-                        free_kernel(kernel, 3);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            kernel = create_outline_kernel();
+                            bmp8_applyFilter(image8, kernel, 3);
+                            free_kernel(kernel, 3);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
+                            bmp24_outline(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
                     case 8: { // Reliefs (Emboss)
-                        kernel = create_emboss_kernel();
-                        bmp8_applyFilter(image, kernel, 3);
-                        free_kernel(kernel, 3);
-                        bmp8_saveImage(filename, image);
+                        if (type==8) {
+                            kernel = create_emboss_kernel();
+                            bmp8_applyFilter(image8, kernel, 3);
+                            free_kernel(kernel, 3);
+                            bmp8_saveImage(filename, image8);
+                        }
+                        else if (type==24) {
+                            //bmp24_convolution (image24, int x, int y, float ** kernel, int kernelSize)
+                            bmp24_emboss(image24);
+                            bmp24_saveImage(image24, filename);
+                        }
                         break;
                     }
 
@@ -132,9 +218,9 @@ int main() {
             }
 
             case 4:{ // Affichage des infos de l'image
-                if (verif_img_null(image)) break;
+                if (verif_img_null_8(image8)) break;
 
-                bmp8_printInfo(image);
+                bmp8_printInfo(image8);
                 break;
             }
 
@@ -151,8 +237,10 @@ int main() {
     // Libérations finales
     if (filename != NULL)
         free(filename);
-    if (image != NULL)
-        bmp8_free(image);
+    if (image8 != NULL)
+        bmp8_free(image8);
+    if (image24 != NULL)
+        bmp24_free(image24);
 
     return 0;
 }

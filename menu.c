@@ -5,7 +5,24 @@
 #include <stdio.h>
 #include "menu.h"
 
-int menu(){
+int type_img() {
+    printf("Veuillez choisir une option :\n");
+    printf("8. bmp8 (gris)\n");
+    printf("24. bmp24 (couleurs)\n");
+
+    int type;
+    scanf("%d",&type);
+    while (type!=8 && type!=24) {
+        printf("Veuillez choisir une option valide (soit 8, soit 24) :\n");
+        scanf("%d",&type);
+    }
+
+    printf(">>> Votre choix : %d\n",type);
+
+    return type;
+}
+
+int menu() {
     int option=0;
 
     printf("Veuillez choisir une option :\n");
@@ -16,7 +33,7 @@ int menu(){
     printf("5. Quitter\n");
 
     scanf("%d",&option);
-    while (option<1 || option>5){
+    while (option<1 || option>5) {
       printf("Veuillez choisir une option valide (entre 1 et 5) :\n");
       scanf("%d",&option);
     }
@@ -25,14 +42,14 @@ int menu(){
     return option;
 }
 
-int menu_3(){
+int menu_3() {
 	int option_3=0;
 
     // Menu de tous les filtres possibles:
     printf("Veuillez choisir un filtre :\n");
     printf("1. Negatif\n");
     printf("2. Luminosite\n");
-    printf("3. Binarisation\n");
+    printf("3. Binarisation (bmp8)/Conversion en gris (bmp24)\n");
     printf("4. Flou\n");
     printf("5. Flou gaussien\n");
     printf("6. Nettete\n");
@@ -41,7 +58,7 @@ int menu_3(){
     printf("9. Retourner au menu precedent\n");
 
     scanf("%d",&option_3);
-    while (option_3<1 || option_3>9){
+    while (option_3<1 || option_3>9) {
         printf("Veuillez choisir une option valide (entre 1 et 9) :\n");
         scanf("%d",&option_3);
         //getchar();

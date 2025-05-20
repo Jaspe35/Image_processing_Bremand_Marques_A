@@ -11,14 +11,14 @@
 t_pixel **bmp24_allocateDataPixels(int width, int height) {
     t_pixel **pixels = malloc(height * sizeof(t_pixel *));
     if (pixels == NULL) {
-        printf("Erreur d'allocation mémoire pour les lignes.\n");
+        printf("Erreur d'allocation memoire pour les lignes.\n");
         return NULL;
     }
 
     for (int i = 0; i < height; i++) {
         pixels[i] = malloc(width * sizeof(t_pixel));
         if (pixels[i] == NULL) {
-            printf("Erreur d'allocation mémoire pour les colonnes.\n");
+            printf("Erreur d'allocation memoire pour les colonnes.\n");
             for (int j = 0; j < i; j++) {
               free(pixels[j]);
             }
@@ -44,7 +44,7 @@ void bmp24_freeDataPixels(t_pixel **pixels, int height) {
 t_bmp24 *bmp24_allocate(int width, int height, int colorDepth) {
     t_bmp24 *img = malloc(sizeof(t_bmp24));
     if (img == NULL) {
-        printf("Erreur d'allocation mémoire pour l'image.\n");
+        printf("Erreur d'allocation memoire pour l'image.\n");
         return NULL;
     }
 
@@ -82,7 +82,7 @@ void file_rawWrite (uint32_t position, void * buffer, uint32_t size, size_t n, F
 
 void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
-  		printf("Coordonnées de pixel hors limites.\n");
+  		printf("Coordonnees de pixel hors limites.\n");
     	return;
   }
 
@@ -110,7 +110,7 @@ void bmp24_readPixelData (t_bmp24 * image, FILE * file) {
 
 void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
-  		printf("Coordonnées de pixel hors limites.\n");
+  		printf("Coordonnees de pixel hors limites.\n");
     	return;
   }
 
@@ -276,7 +276,7 @@ void bmp24_boxBlur(t_bmp24 *img) {
 
     t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
     if (temp == NULL) {
-        fprintf(stderr, "Erreur : allocation de l’image temporaire échouée.\n");
+        fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
           free(kernel[i]);
         }
@@ -323,7 +323,7 @@ void bmp24_gaussianBlur (t_bmp24 * img){
 
   t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
     if (temp == NULL) {
-        fprintf(stderr, "Erreur : allocation de l’image temporaire échouée.\n");
+        fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
           free(kernel[i]);
         }
@@ -369,9 +369,9 @@ void bmp24_outline (t_bmp24 * img) {
     }
   }
 
-  t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
+t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
   if (temp == NULL) {
-  		fprintf(stderr, "Erreur : allocation de l’image temporaire échouée.\n");
+  		fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
         	free(kernel[i]);
         }
@@ -417,7 +417,7 @@ void bmp24_emboss (t_bmp24 * img) {
   }
    t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
    if (temp == NULL) {
-        fprintf(stderr, "Erreur : allocation de l’image temporaire échouée.\n");
+        fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
           free(kernel[i]);
         }
@@ -464,7 +464,7 @@ void bmp_24_sharpen (t_bmp24 * img) {
 
   t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
   if (temp == NULL) {
-  		fprintf(stderr, "Erreur : allocation de l’image temporaire échouée.\n");
+  		fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
         	free(kernel[i]);
         }
@@ -472,7 +472,7 @@ void bmp_24_sharpen (t_bmp24 * img) {
         return;
   }
 
-   for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
+   for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y ait pas de bugs
        for (int x = offset; x < img->width - offset; x++) {
             temp->data[y][x] = bmp24_convolution(img, x, y, kernel, kernelSize);
        }
