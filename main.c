@@ -204,9 +204,11 @@ int main() {
 
             case 5:{ // Egalisation d'histogramme
                 if (type==8) {
+                    if (verif_img_null_8(image8)) break;
                     bmp8_equalize(image8);
                 }
                 else if (type==24) {
+                    if (verif_img_null_24(image24)) break;
                     bmp24_equalize(image24);
                 }
                 break;
