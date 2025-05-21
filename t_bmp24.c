@@ -172,6 +172,44 @@ void bmp24_saveImage (t_bmp24 * img, const char * filename) {
     printf("Charger avec succes !\n");
 }
 
+/*
+// Sauvegarde image BMP 24 bits
+void bmp24_saveImage(t_bmp24 *image, const char *filename) {
+FILE *file = fopen(filename, "wb");
+if (!file) return;
+
+// Recalculer header et info
+uint32_t imageSize = image->width * image->height * 3;
+image->header.size = image->header.offset + imageSize;
+image->info.imageSize = imageSize;
+
+// Écrire header BMP
+file_rawWrite(OFFSET_TYPE,        &image->header.type,       2, 1, file);
+file_rawWrite(OFFSET_FILESIZE,    &image->header.size,       4, 1, file);
+uint32_t reserved = 0;
+file_rawWrite(4, &reserved, 2, 1, file);
+file_rawWrite(6, &reserved, 2, 1, file);
+file_rawWrite(OFFSET_DATA_OFFSET, &image->header.offset,     4, 1, file);
+
+// Écrire BITMAPINFOHEADER
+file_rawWrite(OFFSET_INFO_SIZE,        &image->info.size,        4,1,file);
+file_rawWrite(OFFSET_INFO_WIDTH,       &image->info.width,       4,1,file);
+file_rawWrite(OFFSET_INFO_HEIGHT,      &image->info.height,      4,1,file);
+file_rawWrite(OFFSET_INFO_PLANES,      &image->info.planes,      2,1,file);
+file_rawWrite(OFFSET_INFO_BITS,        &image->info.bits,        2,1,file);
+file_rawWrite(OFFSET_INFO_COMPRESSION, &image->info.compression, 4,1,file);
+file_rawWrite(OFFSET_INFO_IMAGE_SIZE,  &image->info.imageSize,   4,1,file);
+file_rawWrite(38, &image->info.xPixelsPerMeter,4,1,file);
+file_rawWrite(42, &image->info.yPixelsPerMeter,4,1,file);
+file_rawWrite(46, &image->info.colorsUsed,    4,1,file);
+file_rawWrite(50, &image->info.importantColors,4,1,file);
+
+// Écrire pixels
+bmp24_writePixelData(image, file);
+fclose(file);
+}
+*/
+
 void bmp24_negative(t_bmp24 *img) {
     for (int i = 0; i < img->height; i++) {
         for (int j = 0; j < img->width; j++) {
