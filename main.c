@@ -29,7 +29,7 @@ int verif_img_null_24(t_bmp24 *image) { // Fonction de vérification: image vide
 
 
 int main() {
-    int image_processing = 1;
+    int image_processing = 1; // Tant que la variable est à True, le menu s'affichera
     char * filename = malloc(50*sizeof(char));
 
     int type = type_img(); // Fonction pour savoir si l'on va travailler avec une image grise ou en couleurs
@@ -42,32 +42,28 @@ int main() {
 
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
-                scanf("%s",filename);
+                scanf(" %s",filename);
                 if (type==8) {
                     image8 = bmp8_loadImage(filename);
-                    bmp8_saveImage(filename,image8);
                 }
                 else if (type==24) {
                     image24 = bmp24_loadImage(filename);
-                    bmp24_saveImage(image24,filename);
                 }
                 break;
             }
 
             case 2:{ // Sauvegarder l'image
+                char * newname = malloc(55*sizeof(char));
+                printf("Chemin/nom de la nouvelle image : ");
+                scanf(" %s",newname);
                 if (type==8) {
                     if (verif_img_null_8(image8)) break;
-                    printf("Chemin du fichier : ");
-                    scanf("%s",filename);
-                    bmp8_saveImage(filename, image8);
+                    bmp8_saveImage(newname,image8);
                 }
                 else if (type==24) {
                     if (verif_img_null_24(image24)) break;
-                    printf("Chemin du fichier : ");
-                    scanf("%s",filename);
-                    bmp24_saveImage(image24,filename);
+                    bmp24_saveImage(image24,newname);
                 }
-
                 break;
             }
 
@@ -87,11 +83,9 @@ int main() {
                     case 1: { // Négatif
                         if (type==8) {
                             bmp8_negative(image8);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_negative(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -105,11 +99,9 @@ int main() {
 
                         if (type==8) {
                             bmp8_brightness(image8, val);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_brightness(image24, val);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -123,11 +115,9 @@ int main() {
                             } while (seuil<0 || seuil>255);
 
                             bmp8_threshold(image8, seuil);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_grayscale(image24);
-                            bmp24_saveImage(image24,filename);
                         }
                         break;
                     }
@@ -137,11 +127,9 @@ int main() {
                             kernel = create_box_blur_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_boxBlur(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -151,11 +139,9 @@ int main() {
                             kernel = create_gaussian_blur_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_gaussianBlur(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -165,11 +151,9 @@ int main() {
                             kernel = create_sharpen_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             //bmp24_sharpen(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -179,11 +163,9 @@ int main() {
                             kernel = create_outline_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_outline(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -193,11 +175,9 @@ int main() {
                             kernel = create_emboss_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_emboss(image24);
-                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -225,11 +205,9 @@ int main() {
             case 5:{ // Egalisation d'histogramme
                 if (type==8) {
                     bmp8_equalize(image8);
-                    bmp8_saveImage(filename, image8);
                 }
                 else if (type==24) {
                     bmp24_equalize(image24);
-                    bmp24_saveImage(image24, filename);
                 }
                 break;
             }

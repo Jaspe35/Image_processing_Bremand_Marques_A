@@ -116,7 +116,6 @@ void bmp8_saveImage(const char * filename, t_bmp8 * image) {
 
       fclose(file); // Fermer le fichier
       printf("Image sauvegardee avec succes dans %s\n", filename);
-
 }
 
 
