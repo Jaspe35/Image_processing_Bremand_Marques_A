@@ -158,7 +158,7 @@ t_bmp24 * bmp24_loadImage (const char * filename){
 }
 
 void bmp24_saveImage (t_bmp24 * img, const char * filename) {
-  FILE * file = fopen(filename, "rb");
+  FILE * file = fopen(filename, "wb");
   if (file == NULL) {
     printf("Erreur : impossible d’ouvrir le fichier.\n");
     return;
@@ -171,6 +171,42 @@ void bmp24_saveImage (t_bmp24 * img, const char * filename) {
   fclose(file);
 }
 
+// Sauvegarde image BMP 24 bits
+/*void bmp24_saveImage(t_bmp24 *image, const char *filename) {
+    FILE *file = fopen(filename, "wb");
+    if (!file) return;
+
+    // Recalculer header et info
+    uint32_t imageSize = image->width * image->height * 3;
+    image->header.size = image->header.offset + imageSize;
+    image->info.imageSize = imageSize;
+
+    // Écrire header BMP
+    file_rawWrite(BMP_TYPE,        &image->header.type,       2, 1, file);
+    file_rawWrite(BITMAP_SIZE,    &image->header.size,       4, 1, file);
+    uint32_t reserved = 0;
+    file_rawWrite(4, &reserved, 2, 1, file);
+    file_rawWrite(6, &reserved, 2, 1, file);
+    file_rawWrite(BITMAP_OFFSET, &image->header.offset,     4, 1, file);
+
+    // Écrire BITMAPINFOHEADER
+    file_rawWrite(BITMAP_SIZE,        &image->info.size,        4,1,file);
+    file_rawWrite(BITMAP_WIDTH,       &image->info.width,       4,1,file);
+    file_rawWrite(BITMAP_HEIGHT,      &image->info.height,      4,1,file);
+    file_rawWrite(OFFSET_INFO_PLANES,      &image->info.planes,      2,1,file);
+    file_rawWrite(OFFSET_INFO_BITS,        &image->info.bits,        2,1,file);
+    file_rawWrite(OFFSET_INFO_COMPRESSION, &image->info.compression, 4,1,file);
+    file_rawWrite(OFFSET_INFO_IMAGE_SIZE,  &image->info.imageSize,   4,1,file);
+    file_rawWrite(38, &image->info.xPixelsPerMeter,4,1,file);
+    file_rawWrite(42, &image->info.yPixelsPerMeter,4,1,file);
+    file_rawWrite(46, &image->info.colorsUsed,    4,1,file);
+    file_rawWrite(50, &image->info.importantColors,4,1,file);
+
+    // Écrire pixels
+    bmp24_writePixelData(image, file);
+    fclose(file);
+}
+*/
 
 void bmp24_negative(t_bmp24 *img) {
     for (int i = 0; i < img->height; i++) {
@@ -180,6 +216,7 @@ void bmp24_negative(t_bmp24 *img) {
             img->data[i][j].blue  = 255 - img->data[i][j].blue;
         }
     }
+    printf("Filtre negatif applique avec succes !\n");
 }
 
 void bmp24_grayscale(t_bmp24 *img) {
@@ -191,6 +228,7 @@ void bmp24_grayscale(t_bmp24 *img) {
             img->data[i][j].red = moyenne;
         }
     }
+    printf("Filtre de conversion en gris applique avec succes !\n");
 }
 
 void bmp24_brightness(t_bmp24 *img, int value) {
@@ -213,6 +251,7 @@ void bmp24_brightness(t_bmp24 *img, int value) {
             else img->data[i][j].blue = b;
         }
     }
+    printf("Filtre de luminosite applique avec succes !\n");
 }
 
 
@@ -220,7 +259,7 @@ t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int ker
     float red = 0, green = 0, blue = 0 ;
 
     if (img == NULL || kernel == NULL) {
-        fprintf(stderr, "Erreur : image ou noyau NULL\n");
+        printf("Erreur : image ou noyau NULL\n");
         t_pixel erreur = {0, 0, 0};
         return erreur;
     }
@@ -252,6 +291,7 @@ t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int ker
     final.green = (uint8_t) green;
     final.blue = (uint8_t) blue;
 
+    printf("Convolution appliquee avec succes\n");
     return final;
 }
 
@@ -259,19 +299,19 @@ void bmp24_boxBlur(t_bmp24 *img) {
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
-  float reference[3][3] = {
+    float reference[3][3] = {
     {1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f},
     {1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f},
     {1.0f / 9.0f, 1.0f / 9.0f, 1.0f / 9.0f},
-  };
+    };
 
-  float **kernel = malloc(kernelSize * sizeof(float *));
-  for (int i = 0; i < kernelSize; i++) {
-    kernel[i] = malloc(kernelSize * sizeof(float));
-    for (int j = 0; j < kernelSize; j++) {
-		kernel[i][j] = reference[i][j];
+    float **kernel = malloc(kernelSize * sizeof(float *));
+    for (int i = 0; i < kernelSize; i++) {
+        kernel[i] = malloc(kernelSize * sizeof(float));
+        for (int j = 0; j < kernelSize; j++) {
+		    kernel[i][j] = reference[i][j];
+        }
     }
-  }
 
     t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
     if (temp == NULL) {
@@ -300,27 +340,28 @@ void bmp24_boxBlur(t_bmp24 *img) {
     }
     free(kernel);
     bmp24_free(temp);
+    printf("Filtre applique avec succes !\n");
 }
 
 void bmp24_gaussianBlur (t_bmp24 * img){
-  int kernelSize = 3;
-  int offset = kernelSize / 2;
+    int kernelSize = 3;
+    int offset = kernelSize / 2;
 
-   float reference[3][3] = {
+    float reference[3][3] = {
     {1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f},
     {2.0f / 16.0f, 4.0f / 16.0f, 2.0f / 16.0f},
     {1.0f / 16.0f, 2.0f / 16.0f, 1.0f / 16.0f},
-  };
+    };
 
-  float **kernel = malloc(kernelSize * sizeof(float *));
-  for (int i = 0; i < kernelSize; i++) {
-    kernel[i] = malloc(kernelSize * sizeof(float));
-    for (int j = 0; j < kernelSize; j++) {
-		kernel[i][j] = reference[i][j];
+    float **kernel = malloc(kernelSize * sizeof(float *));
+    for (int i = 0; i < kernelSize; i++) {
+        kernel[i] = malloc(kernelSize * sizeof(float));
+        for (int j = 0; j < kernelSize; j++) {
+		    kernel[i][j] = reference[i][j];
+        }
     }
-  }
 
-  t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
+    t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
     if (temp == NULL) {
         fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
@@ -347,42 +388,42 @@ void bmp24_gaussianBlur (t_bmp24 * img){
     }
     free(kernel);
     bmp24_free(temp);
-
+    printf("Filtre applique avec succes !\n");
 }
 
 void bmp24_outline (t_bmp24 * img) {
-  int kernelSize = 3;
-  int offset = kernelSize / 2;
+    int kernelSize = 3;
+    int offset = kernelSize / 2;
 
     float reference[3][3] = {
     {-1, -1, -1},
     {-1, 8, -1},
     {-1, -1, -1},
-  };
+    };
 
-  float **kernel = malloc(kernelSize * sizeof(float *));
-  for (int i = 0; i < kernelSize; i++) {
-    kernel[i] = malloc(kernelSize * sizeof(float));
-    for (int j = 0; j < kernelSize; j++) {
-		kernel[i][j] = reference[i][j];
+    float **kernel = malloc(kernelSize * sizeof(float *));
+    for (int i = 0; i < kernelSize; i++) {
+        kernel[i] = malloc(kernelSize * sizeof(float));
+        for (int j = 0; j < kernelSize; j++) {
+		    kernel[i][j] = reference[i][j];
+        }
     }
-  }
 
-t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
-  if (temp == NULL) {
+    t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
+    if (temp == NULL) {
   		fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
         	free(kernel[i]);
         }
        	free(kernel);
         return;
-  }
+    }
 
-   for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
+    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
        for (int x = offset; x < img->width - offset; x++) {
             temp->data[y][x] = bmp24_convolution(img, x, y, kernel, kernelSize);
        }
-   }
+    }
 
     for (int y = offset; y < img->height - offset; y++) {
         for (int x = offset; x < img->width - offset; x++) {
@@ -395,34 +436,35 @@ t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
     }
     free(kernel);
     bmp24_free(temp);
+    printf("Filtre applique avec succes !\n");
 }
 
 void bmp24_emboss (t_bmp24 * img) {
-  int kernelSize = 3;
-  int offset = kernelSize / 2;
+    int kernelSize = 3;
+    int offset = kernelSize / 2;
 
-  float reference[3][3] = {
+    float reference[3][3] = {
     {-2, -1, 0},
     {-1, 1, 1},
     {0, 1, 2},
-  };
+    };
 
-  float **kernel = malloc(kernelSize * sizeof(float *));
-  for (int i = 0; i < kernelSize; i++) {
-    kernel[i] = malloc(kernelSize * sizeof(float));
-    for (int j = 0; j < kernelSize; j++) {
-		kernel[i][j] = reference[i][j];
+    float **kernel = malloc(kernelSize * sizeof(float *));
+    for (int i = 0; i < kernelSize; i++) {
+        kernel[i] = malloc(kernelSize * sizeof(float));
+        for (int j = 0; j < kernelSize; j++) {
+		    kernel[i][j] = reference[i][j];
+        }
     }
-  }
-   t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
-   if (temp == NULL) {
+    t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
+    if (temp == NULL) {
         fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
           free(kernel[i]);
         }
         free(kernel);
         return;
-   }
+    }
 
     for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
         for (int x = offset; x < img->width - offset; x++) {
@@ -439,43 +481,45 @@ void bmp24_emboss (t_bmp24 * img) {
     for (int i = 0; i < kernelSize; i++) {
         free(kernel[i]);
     }
+
     free(kernel);
     bmp24_free(temp);
+    printf("Filtre applique avec succes !\n");
 }
 
 void bmp_24_sharpen (t_bmp24 * img) {
-  int kernelSize = 3;
-  int offset = kernelSize / 2;
+    int kernelSize = 3;
+    int offset = kernelSize / 2;
 
-  float reference[3][3] = {
+    float reference[3][3] = {
     {0, -1, 0},
     {-1, 5, -1},
     {0, -1, 0},
-  };
+    };
 
-  float **kernel = malloc(kernelSize * sizeof(float *));
-  for (int i = 0; i < kernelSize; i++) {
-    kernel[i] = malloc(kernelSize * sizeof(float));
-    for (int j = 0; j < kernelSize; j++) {
-		kernel[i][j] = reference[i][j];
+    float **kernel = malloc(kernelSize * sizeof(float *));
+    for (int i = 0; i < kernelSize; i++) {
+        kernel[i] = malloc(kernelSize * sizeof(float));
+        for (int j = 0; j < kernelSize; j++) {
+		    kernel[i][j] = reference[i][j];
+        }
     }
-  }
 
-  t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
-  if (temp == NULL) {
+    t_bmp24 *temp = bmp24_allocate(img->width, img->height, img->colorDepth);
+    if (temp == NULL) {
   		fprintf(stderr, "Erreur : allocation de l’image temporaire echouee.\n");
         for (int i = 0; i < kernelSize; i++) {
         	free(kernel[i]);
         }
        	free(kernel);
         return;
-  }
+    }
 
-   for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y ait pas de bugs
+    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y ait pas de bugs
        for (int x = offset; x < img->width - offset; x++) {
             temp->data[y][x] = bmp24_convolution(img, x, y, kernel, kernelSize);
        }
-   }
+    }
 
     for (int y = offset; y < img->height - offset; y++) {
         for (int x = offset; x < img->width - offset; x++) {
@@ -486,14 +530,13 @@ void bmp_24_sharpen (t_bmp24 * img) {
     for (int i = 0; i < kernelSize; i++) {
         free(kernel[i]);
     }
+
     free(kernel);
     bmp24_free(temp);
-
+    printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_equalize(t_bmp24 * img) {
-    // Creation de la luminance et calcul de la CDF comme pour les niveaux de gris
-
+void bmp24_equalize(t_bmp24 * img) { // Creation de la luminance et calcul de la CDF comme pour les niveaux de gris
     // Allocation un tableau YUV de la luminance
     t_yuv * data = malloc(img->width * img->height * sizeof(t_yuv));
     int hist[256] = {0};
@@ -517,6 +560,7 @@ void bmp24_equalize(t_bmp24 * img) {
             cpt++;
         }
     }
+
     // Histogramme cumulé
     cdf[0] = hist[0];
     for (int x = 1; x < 255; x++) {
@@ -565,6 +609,6 @@ void bmp24_equalize(t_bmp24 * img) {
         }
     }
 
-    printf("Egalisation appliquee avec succes !\n");
     free(data);
+    printf("Egalisation appliquee avec succes !\n");
 }

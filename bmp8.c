@@ -138,6 +138,7 @@ void bmp8_negative(t_bmp8 * img) {
             img->data[index] = 255 - img->data[index];  //(car data est en réalité un tableau 1D)
         }
     }
+    printf("Filtre negatif applique avec succes !\n");
 }
 
 void bmp8_brightness(t_bmp8 * img, int value) {
@@ -154,6 +155,7 @@ void bmp8_brightness(t_bmp8 * img, int value) {
             }
         }
     }
+    printf("Filtre de luminosite applique avec succes !\n");
 }
 
 
@@ -169,6 +171,7 @@ void bmp8_threshold(t_bmp8 * img, int threshold) {
       }
     }
   }
+  printf("Filtre de binarisation applique avec succes !\n");
 }
 
 
@@ -214,6 +217,7 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
         img->data[i] = newImg[i];
     }
 
+    printf("Filtre applique avec succes !\n");
     free(newImg);
 }
 

@@ -30,7 +30,7 @@ int verif_img_null_24(t_bmp24 *image) { // Fonction de vérification: image vide
 
 int main() {
     int image_processing = 1; // Tant que la variable est à True, le menu s'affichera
-    char * filename = malloc(50*sizeof(char));
+    char * filename = malloc(55*sizeof(char));
 
     int type = type_img(); // Fonction pour savoir si l'on va travailler avec une image grise ou en couleurs
     t_bmp8 * image8 = NULL;
@@ -53,7 +53,7 @@ int main() {
             }
 
             case 2:{ // Sauvegarder l'image
-                char * newname = malloc(55*sizeof(char));
+                char * newname = malloc(60*sizeof(char));
                 printf("Chemin/nom de la nouvelle image : ");
                 scanf(" %s",newname);
                 if (type==8) {
