@@ -42,7 +42,7 @@ int main() {
 
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
-                scanf(" %s",filename);
+                scanf("%s",filename);
                 if (type==8) {
                     image8 = bmp8_loadImage(filename);
                     bmp8_saveImage(filename,image8);
@@ -58,13 +58,13 @@ int main() {
                 if (type==8) {
                     if (verif_img_null_8(image8)) break;
                     printf("Chemin du fichier : ");
-                    scanf(" %s",filename);
+                    scanf("%s",filename);
                     bmp8_saveImage(filename, image8);
                 }
                 else if (type==24) {
                     if (verif_img_null_24(image24)) break;
                     printf("Chemin du fichier : ");
-                    scanf(" %s",filename);
+                    scanf("%s",filename);
                     bmp24_saveImage(image24,filename);
                 }
 
