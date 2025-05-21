@@ -111,7 +111,7 @@ void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
   		printf("Coordonnees de pixel hors limites.\n");
     	return;
-  }
+	}
 
   t_pixel pixel = image->data[y][x];
 
@@ -124,11 +124,11 @@ void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 }
 
 void bmp24_writePixelData (t_bmp24 * image, FILE * file) {
-  for (int y = 0; y < image->height; y++) {
-    for (int x = 0; x < image->width; x++) {
-      bmp24_writePixelValue(image, x, y, file);
+    for (int y = 0; y < image->height; y++) {
+        for (int x = 0; x < image->width; x++) {
+        bmp24_writePixelValue(image, x, y, file);
+        }
     }
-  }
 }
 
 t_bmp24 * bmp24_loadImage (const char * filename){
@@ -164,7 +164,7 @@ void bmp24_saveImage (t_bmp24 * img, const char * filename) {
         return;
     }
     file_rawWrite(0, &img->header, sizeof(t_bmp_header), 1, file);
-    file_rawWrite(HEADER_SIZE, &img->header_info, sizeof(t_bmp_info), 1, file);
+    file_rawWrite(sizeof(t_bmp_header), &img->header_info, sizeof(t_bmp_info), 1, file);
 
     bmp24_writePixelData(img, file);
 
