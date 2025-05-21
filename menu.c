@@ -29,7 +29,7 @@ int menu() {
     printf("\t1. Ouvrir une image\n");
     printf("\t2. Sauvegarder une image\n");
     printf("\t3. Appliquer un filtre\n");
-    printf("\t4. Afficher les informations de l'image\n");
+    printf("\t4. Afficher les informations de l'image (uniquement bmp8)\n");
     printf("\t5. Egalisation d'histogramme\n");
     printf("\t6. Quitter\n");
 

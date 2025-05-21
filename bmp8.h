@@ -33,12 +33,11 @@ void bmp8_threshold(t_bmp8 * img, int threshold); //N
 
 void bmp8_applyFilter(t_bmp8 * img, float ** kernel, int kernelSize); //F
 
-unsigned int * bmp8_computeHistogram(t_bmp8 * img); // A faire 3.3.1
+unsigned int * bmp8_computeHistogram(t_bmp8 * img); //F
 
-unsigned int * bmp8_computeCDF(unsigned int * hist); // A faire 3.3.2
+unsigned int * bmp8_computeCDF(unsigned int * hist); //F
 
-void bmp8_equalize(t_bmp8 * img) ; // A faire 3.3.3
+void bmp8_equalize(t_bmp8 * img) ; //F
 
-// Ne pas oublier de changer le main pour que les égalisations d'histogramme soient disponibles.
 
 #endif //T_BMP8_H

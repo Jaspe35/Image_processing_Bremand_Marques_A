@@ -14,12 +14,10 @@
 t_bmp8 * bmp8_loadImage(const char * filename) {
     FILE * file = fopen(filename, "rb");
     if (file == NULL) {
-        printf("Impossible de charger le fichier\n");
-        printf("%s\n",filename); //debug
+        printf("Impossible de charger le fichier : %s\n",filename);
         fclose(file);
         return NULL;
     }
-    printf("Charger avec succes !\n");
 
     // lecture de l'en-tête
     unsigned char header[54];
@@ -44,11 +42,11 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Allocation de l'image
     t_bmp8 *image = malloc(sizeof(t_bmp8)); // Allocation mémoire
-        if (image == NULL) {
-            printf("Erreur : Allocation memoire impossible\n");
-            fclose(file);
-            return NULL;
-        }
+    if (image == NULL) {
+        printf("Erreur : Allocation memoire impossible\n");
+        fclose(file);
+        return NULL;
+    }
 
     // Copie de l'en-tête dans l'image
     memcpy(image->header, header, 54);
@@ -69,7 +67,6 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         free(image);
         fclose(file);
         return NULL;
-
     }
 
     // Lecture des datas
@@ -87,8 +84,10 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     image->dataSize = dataSize;
 
     fclose(file);
+    printf("Charger avec succes !\n");
     return image;
 }
+
 
 void bmp8_saveImage(const char * filename, t_bmp8 * image) {
       FILE *file = fopen(filename, "wb"); // Ouvrir le fichier en écriture binaire (car fichier .bmp)

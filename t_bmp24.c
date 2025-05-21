@@ -26,7 +26,6 @@ t_pixel **bmp24_allocateDataPixels(int width, int height) {
             return NULL;
         }
     }
-
     return pixels;
 }
 
@@ -154,8 +153,8 @@ t_bmp24 * bmp24_loadImage (const char * filename){
 
   bmp24_readPixelData (image, file);
   fclose(file);
+  printf("Charger avec succes !\n");
   return image;
-
 }
 
 void bmp24_saveImage (t_bmp24 * img, const char * filename) {
@@ -566,6 +565,6 @@ void bmp24_equalize(t_bmp24 * img) {
         }
     }
 
-    printf("Égalisation appliquée avec succès !\n");
+    printf("Egalisation appliquee avec succes !\n");
     free(data);
 }
