@@ -27,25 +27,10 @@ int verif_img_null_24(t_bmp24 *image) { // Fonction de vérification: image vide
     return 0;
 }
 
-int Save_new_8(char * newname_f,t_bmp8 *image8) {
-    printf("Chemin/nom de la nouvelle image : ");
-    scanf("%s",newname_f);
-    bmp8_saveImage(newname_f,image8);
-    return 0;
-}
-
-int Save_new_24(char * newname_f,t_bmp24 *image24) {
-    printf("Chemin/nom de la nouvelle image : ");
-    scanf("%s",newname_f);
-    bmp24_saveImage(image24,newname_f);
-    return 0;
-}
-
 
 int main() {
     int image_processing = 1;
     char * filename = malloc(50*sizeof(char));
-    char * newname = malloc(55*sizeof(char));
 
     int type = type_img(); // Fonction pour savoir si l'on va travailler avec une image grise ou en couleurs
     t_bmp8 * image8 = NULL;
@@ -57,17 +42,14 @@ int main() {
 
             case 1:{ // Ouvrir une image
                 printf("Chemin du fichier : ");
-                scanf("%s",filename);
-                printf("debug-1 : %s\n",filename);
+                scanf(" %s",filename);
                 if (type==8) {
-                    printf("debug0");
-                    //image8 = bmp8_loadImage(filename);
-                    printf("debug1");
-                    Save_new_8(newname,image8);
+                    image8 = bmp8_loadImage(filename);
+                    bmp8_saveImage(filename,image8);
                 }
                 else if (type==24) {
                     image24 = bmp24_loadImage(filename);
-                    Save_new_24(newname,image24);
+                    bmp24_saveImage(image24,filename);
                 }
                 break;
             }
@@ -75,14 +57,17 @@ int main() {
             case 2:{ // Sauvegarder l'image
                 if (type==8) {
                     if (verif_img_null_8(image8)) break;
-                    bmp8_saveImage(newname,image8);
-                    //Save_new_8(newname,image8);
+                    printf("Chemin du fichier : ");
+                    scanf(" %s",filename);
+                    bmp8_saveImage(filename, image8);
                 }
                 else if (type==24) {
                     if (verif_img_null_24(image24)) break;
+                    printf("Chemin du fichier : ");
+                    scanf(" %s",filename);
                     bmp24_saveImage(image24,filename);
-                    //Save_new_24(newname,image24);
                 }
+
                 break;
             }
 
@@ -102,11 +87,11 @@ int main() {
                     case 1: { // Négatif
                         if (type==8) {
                             bmp8_negative(image8);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_negative(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -120,11 +105,11 @@ int main() {
 
                         if (type==8) {
                             bmp8_brightness(image8, val);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_brightness(image24, val);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -138,11 +123,11 @@ int main() {
                             } while (seuil<0 || seuil>255);
 
                             bmp8_threshold(image8, seuil);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_grayscale(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24,filename);
                         }
                         break;
                     }
@@ -152,11 +137,11 @@ int main() {
                             kernel = create_box_blur_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_boxBlur(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -166,11 +151,11 @@ int main() {
                             kernel = create_gaussian_blur_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_gaussianBlur(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -180,11 +165,11 @@ int main() {
                             kernel = create_sharpen_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             //bmp24_sharpen(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -194,11 +179,11 @@ int main() {
                             kernel = create_outline_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_outline(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -208,11 +193,11 @@ int main() {
                             kernel = create_emboss_kernel();
                             bmp8_applyFilter(image8, kernel, 3);
                             free_kernel(kernel, 3);
-                            Save_new_8(newname,image8);
+                            bmp8_saveImage(filename, image8);
                         }
                         else if (type==24) {
                             bmp24_emboss(image24);
-                            Save_new_24(newname,image24);
+                            bmp24_saveImage(image24, filename);
                         }
                         break;
                     }
@@ -240,11 +225,11 @@ int main() {
             case 5:{ // Egalisation d'histogramme
                 if (type==8) {
                     bmp8_equalize(image8);
-                    Save_new_8(newname,image8);
+                    bmp8_saveImage(filename, image8);
                 }
                 else if (type==24) {
                     bmp24_equalize(image24);
-                    Save_new_24(newname,image24);
+                    bmp24_saveImage(image24, filename);
                 }
                 break;
             }
@@ -256,6 +241,7 @@ int main() {
 
             default : printf("Erreur dans la saisie de l'option choisie\n");
         }
+
     }
 
     // Libérations finales
