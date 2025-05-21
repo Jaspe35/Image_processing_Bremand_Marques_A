@@ -61,8 +61,11 @@ int main() {
                     bmp8_saveImage(newname,image8);
                 }
                 else if (type==24) {
+                    printf("debug0");
                     if (verif_img_null_24(image24)) break;
+                    printf("debug1");
                     bmp24_saveImage(image24,newname);
+                    printf("debug2");
                 }
                 break;
             }
