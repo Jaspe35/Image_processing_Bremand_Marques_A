@@ -26,7 +26,7 @@ int verif_img_null_24(t_bmp24 *image) { // Fonction de vérification: image vide
     }
     return 0;
 }
-
+// C:/Users/noemi/CLionProjects/projet_final/images/lena_color.bmp
 
 int main() {
     int image_processing = 1; // Tant que la variable est à True, le menu s'affichera

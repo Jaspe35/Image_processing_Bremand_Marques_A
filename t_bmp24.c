@@ -83,23 +83,23 @@ void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
   		printf("Coordonnees de pixel hors limites.\n");
     	return;
-  }
+	}
 
-  // Calcul de la position du pixel dans le fichier BMP
-  // BITMAP_OFFSET : défini à 10, indique où commencent les données d’image
-  // lignes sont stockées de bas en haut (donc à l'envers), et chaque pixel prend 3 octets (B, G, R) d'où le *3
-  uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
+    // Calcul de la position du pixel dans le fichier BMP
+    // BITMAP_OFFSET : défini à 10, indique où commencent les données d’image
+    // lignes sont stockées de bas en haut (donc à l'envers), et chaque pixel prend 3 octets (B, G, R) d'où le *3
+    uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
 
-  // Lecture des composantes du pixel (ordre BGR, c'est stocké à l'envers, me demande pas pourquoi...)
-  // la fonction file_rawRead est donné par le PDF
-  file_rawRead(pixelPosition, &image->data[y][x].blue, sizeof(uint8_t), 1, file);
-  file_rawRead(pixelPosition + 1, &image->data[y][x].green, sizeof(uint8_t), 1, file);
-  file_rawRead(pixelPosition + 2, &image->data[y][x].red, sizeof(uint8_t), 1, file);
+    // Lecture des composantes du pixel (ordre BGR, c'est stocké à l'envers, me demande pas pourquoi...)
+    // la fonction file_rawRead est donné par le PDF
+    file_rawRead(pixelPosition, &image->data[y][x].blue, sizeof(uint8_t), 1, file);
+    file_rawRead(pixelPosition + 1, &image->data[y][x].green, sizeof(uint8_t), 1, file);
+    file_rawRead(pixelPosition + 2, &image->data[y][x].red, sizeof(uint8_t), 1, file);
 
 }
 
 void bmp24_readPixelData (t_bmp24 * image, FILE * file) {
-  for (int y = 0; y < image->height; y++) {
+    for (int y = image->height - 1; y >= 0; y--) {
         for (int x = 0; x < image->width; x++) {
             bmp24_readPixelValue(image, x, y, file);
         }
@@ -124,7 +124,8 @@ void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 }
 
 void bmp24_writePixelData (t_bmp24 * image, FILE * file) {
-    for (int y = 0; y < image->height; y++) {
+
+    for (int y = image->height - 1; y >= 0; y--) {
         for (int x = 0; x < image->width; x++) {
         bmp24_writePixelValue(image, x, y, file);
         }
@@ -132,41 +133,44 @@ void bmp24_writePixelData (t_bmp24 * image, FILE * file) {
 }
 
 t_bmp24 * bmp24_loadImage (const char * filename){
-  FILE * file = fopen(filename, "rb");
-  if (file == NULL) {
-    printf("Erreur : impossible d’ouvrir le fichier.\n");
-    return NULL;
-  }
-  int32_t width, height;
-  uint16_t depth;
-  file_rawRead(BITMAP_WIDTH,&width, sizeof(int32_t), 1, file);
-  file_rawRead(BITMAP_HEIGHT,&height, sizeof(int32_t), 1, file);
-  file_rawRead(BITMAP_DEPTH,&depth, sizeof(uint16_t), 1, file);
+    FILE * file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("Erreur : impossible d’ouvrir le fichier.\n");
+        return NULL;
+    }
+    int32_t width, height;
+    uint16_t depth;
+    file_rawRead(BITMAP_WIDTH,&width, sizeof(int32_t), 1, file);
+    file_rawRead(BITMAP_HEIGHT,&height, sizeof(int32_t), 1, file);
+    file_rawRead(BITMAP_DEPTH,&depth, sizeof(uint16_t), 1, file);
 
-  t_bmp24 * image = bmp24_allocate(width, height, depth);
-  if (image == NULL) {
+    t_bmp24 * image = bmp24_allocate(width, height, depth);
+    if (image == NULL) {
+        fclose(file);
+        return NULL;
+    }
+    file_rawRead(0, &image->header, HEADER_SIZE, 1, file);
+    file_rawRead(HEADER_SIZE, &image->header_info, sizeof(t_bmp_info), 1, file);
+
+    bmp24_readPixelData (image, file);
     fclose(file);
-    return NULL;
-  }
-  file_rawRead(0, &image->header, sizeof(t_bmp_header), 1, file);
-  file_rawRead(HEADER_SIZE, &image->header_info, sizeof(t_bmp_info), 1, file);
-
-  bmp24_readPixelData (image, file);
-  fclose(file);
-  printf("Charger avec succes !\n");
-  return image;
+    printf("Charger avec succes !\n");
+    return image;
 }
 
 void bmp24_saveImage (t_bmp24 * img, const char * filename) {
     FILE * file = fopen(filename, "wb");
+
+    file_rawWrite(0, &img->header, HEADER_SIZE, 1, file);
+    file_rawWrite(HEADER_SIZE, &img->header_info, INFO_SIZE, 1, file);
+
+
+    bmp24_writePixelData(img, file);
+
     if (file == NULL) {
         printf("Erreur : impossible d’ouvrir le fichier.\n");
         return;
     }
-    file_rawWrite(0, &img->header, sizeof(t_bmp_header), 1, file);
-    file_rawWrite(sizeof(t_bmp_header), &img->header_info, sizeof(t_bmp_info), 1, file);
-
-    bmp24_writePixelData(img, file);
 
     fclose(file);
     printf("Charger avec succes !\n");
