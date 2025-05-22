@@ -4,6 +4,7 @@
 
 #include "t_bmp24.h"
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "bmp_constant.h"
 
@@ -134,7 +135,11 @@ void bmp24_writePixelData (t_bmp24 * image, FILE * file) {  // écriture des pix
 }
 
 t_bmp24 * bmp24_loadImage (const char * filename){  // chargement de l'image
-    FILE * file = fopen(filename, "rb");
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, filename);
+    // printf("Chemin : %s\n", tmp);
+
+    FILE * file = fopen(tmp, "rb");
     if (file == NULL) {
         printf("Erreur : impossible d’ouvrir le fichier.\n");
         return NULL;
@@ -160,7 +165,11 @@ t_bmp24 * bmp24_loadImage (const char * filename){  // chargement de l'image
 }
 
 void bmp24_saveImage (t_bmp24 * img, const char * newname) {  // sauvegarde de l'image
-    FILE * file = fopen(newname, "wb");
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, newname);
+    // printf("Chemin : %s\n", tmp);
+
+    FILE * file = fopen(tmp, "wb");
 
     file_rawWrite(54, &img->header, HEADER_SIZE, 1, file);
     file_rawWrite(HEADER_SIZE, &img->header_info, INFO_SIZE, 1, file);
