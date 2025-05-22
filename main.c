@@ -160,7 +160,7 @@ int main() {
                             free_kernel(kernel, 3);
                         }
                         else if (type==24) {
-                            //bmp24_sharpen(image24);
+                            bmp24_sharpen(image24);
                         }
                         break;
                     }

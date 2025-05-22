@@ -80,112 +80,116 @@ void file_rawWrite (uint32_t position, void * buffer, uint32_t size, size_t n, F
   fseek(file, (long)position, SEEK_SET);
   fwrite(buffer, size, n, file);
 }
-
-void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) { // lecture d'un pixel
-	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
-  		printf("Coordonnees de pixel hors limites.\n");
-    	return;
-	}
-    // Calcul de la position du pixel dans le fichier BMP
-    // BITMAP_OFFSET : défini à 10, indique où commencent les données d’image
-    // lignes sont stockées de bas en haut (donc à l'envers), et chaque pixel prend 3 octets (B, G, R) d'où le *3
-    uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
-
-    // Lecture des composantes du pixel (ordre BGR, c'est stocké à l'envers, me demande pas pourquoi...)
-    // la fonction file_rawRead est donné par le PDF
-    file_rawRead(pixelPosition, &image->data[y][x].blue, sizeof(uint8_t), 1, file);
-    file_rawRead(pixelPosition + 1, &image->data[y][x].green, sizeof(uint8_t), 1, file);
-    file_rawRead(pixelPosition + 2, &image->data[y][x].red, sizeof(uint8_t), 1, file);
-
+void bmp24_readPixelValue(t_bmp24 * image, int x, int y, FILE * file) {
+    uint8_t colors[3];
+    fread(colors, sizeof(uint8_t), 3, file);
+    image->data[y][x].blue = colors[0];
+    image->data[y][x].green = colors[1];
+    image->data[y][x].red = colors[2];
 }
 
-void bmp24_readPixelData (t_bmp24 * image, FILE * file) { //lecture des pixels de l'image
-    for (int y = image->height - 1; y >= 0; y--) {
-        for (int x = 0; x < image->width; x++) {
-            bmp24_readPixelValue(image, x, y, file);
+void bmp24_readPixelData(t_bmp24 * image, FILE * file) {
+    int padding = (4 - (image->width * 3) % 4) % 4;
+
+    for (int i = 0; i < image->height; i++) {
+        for (int j = 0; j < image->width; j++) {
+            bmp24_readPixelValue(image, j, i, file);
         }
-    }
-
-}
-
-void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {  // écriture d'un pixel
-    if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
-        printf("Coordonnees de pixel hors limites.\n");
-    	return;
-	}
-
-
-    t_pixel pixel = image->data[y][x];
-
-    uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
-
-    file_rawWrite(pixelPosition, &pixel.blue, sizeof(uint8_t), 1, file);
-    file_rawWrite(pixelPosition + 1, &pixel.green, sizeof(uint8_t), 1, file);
-    file_rawWrite(pixelPosition + 2, &pixel.red, sizeof(uint8_t), 1, file);
-
-}
-
-void bmp24_writePixelData (t_bmp24 * image, FILE * file) {  // écriture des pixels
-
-    for (int y = image->height - 1; y >= 0; y--) {
-        for (int x = 0; x < image->width; x++) {
-            bmp24_writePixelValue(image, x, y, file);
-        }
+        fseek(file, padding, SEEK_CUR);
     }
 }
 
-t_bmp24 * bmp24_loadImage (const char * filename){  // chargement de l'image
-    char tmp[64]=CHEMIN_IMG;
-    strcat(tmp, filename);
-    // printf("Chemin : %s\n", tmp);
+void bmp24_writePixelValue(t_bmp24 * image, int x, int y, FILE * file) {
+    uint8_t colors[3];
+    colors[0] = image->data[y][x].blue;
+    colors[1] = image->data[y][x].green;
+    colors[2] = image->data[y][x].red;
+    fwrite(colors, sizeof(uint8_t), 3, file);
+}
 
-    FILE * file = fopen(tmp, "rb");
-    if (file == NULL) {
-        printf("Erreur : impossible d’ouvrir le fichier.\n");
+void bmp24_writePixelData(t_bmp24 * image, FILE * file) {
+    int padding = (4 - (image->width * 3) % 4) % 4;
+    uint8_t pad[3] = {0, 0, 0}; // 3 octets de padding (au pire)
+
+    for (int i = 0; i < image->height; i++) {
+        for (int j = 0; j < image->width; j++) {
+            bmp24_writePixelValue(image, j, i, file);
+        }
+        fwrite(pad, sizeof(uint8_t), padding, file);
+    }
+}
+
+t_bmp24 * bmp24_loadImage(const char * filename) {
+    FILE *f = fopen(filename, "rb");
+    if (f == NULL) {
         return NULL;
     }
-    int32_t width, height;
-    uint16_t depth;
-    file_rawRead(BITMAP_WIDTH,&width, sizeof(int32_t), 1, file);
-    file_rawRead(BITMAP_HEIGHT,&height, sizeof(int32_t), 1, file);
-    file_rawRead(BITMAP_DEPTH,&depth, sizeof(uint16_t), 1, file);
 
-    t_bmp24 * image = bmp24_allocate(width, height, depth);
-    if (image == NULL) {
-        fclose(file);
+    unsigned char header[54];
+    fread(header, 1, 54, f);
+
+    int32_t width = *(int32_t *)&header[BITMAP_WIDTH];
+    int32_t height = *(int32_t *)&header[BITMAP_HEIGHT];
+    uint16_t colorDepth = *(uint16_t *)&header[BITMAP_DEPTH];
+
+    t_bmp24 *img = bmp24_allocate(width, height, colorDepth);
+    if (img == NULL) {
+        fclose(f);
         return NULL;
     }
-    file_rawRead(0, &image->header, HEADER_SIZE, 1, file);
-    file_rawRead(HEADER_SIZE, &image->header_info, INFO_SIZE, 1, file);
 
-    bmp24_readPixelData (image, file);
-    fclose(file);
-    printf("Charger avec succes !\n");
-    return image;
+    uint32_t offset = *(uint32_t *)&header[BITMAP_OFFSET];
+    fseek(f, offset, SEEK_SET);
+
+    bmp24_readPixelData(img, f);
+
+    fclose(f);
+    return img;
 }
 
-void bmp24_saveImage (t_bmp24 * img, const char * newname) {  // sauvegarde de l'image
-    char tmp[64]=CHEMIN_IMG;
-    strcat(tmp, newname);
-    // printf("Chemin : %s\n", tmp);
-
-    FILE * file = fopen(tmp, "wb");
-
-    file_rawWrite(54, &img->header, HEADER_SIZE, 1, file);
-    file_rawWrite(HEADER_SIZE, &img->header_info, INFO_SIZE, 1, file);
-
-
-    bmp24_writePixelData(img, file);
-
-    if (file == NULL) {
-        printf("Erreur : impossible d ouvrir le fichier.\n");
+void bmp24_saveImage(t_bmp24 * img, const char * filename) {
+    FILE *f = fopen(filename, "wb");
+    if (f == NULL) {
         return;
     }
 
-    fclose(file);
-    printf("Charger avec succes !\n");
-}
+    int padding = (4 - (img->width * 3) % 4) % 4;
+    uint32_t rowSize = img->width * 3 + padding;
+    uint32_t imageSize = rowSize * img->height;
+    uint32_t fileSize = HEADER_SIZE + INFO_SIZE + imageSize;
 
+    t_bmp_header header;
+    header.type = BMP_TYPE;
+    header.size = fileSize;
+    header.reserved1 = 0;
+    header.reserved2 = 0;
+    header.offset = HEADER_SIZE + INFO_SIZE;
+
+    fwrite(&header.type, sizeof(uint16_t), 1, f);
+    fwrite(&header.size, sizeof(uint32_t), 1, f);
+    fwrite(&header.reserved1, sizeof(uint16_t), 1, f);
+    fwrite(&header.reserved2, sizeof(uint16_t), 1, f);
+    fwrite(&header.offset, sizeof(uint32_t), 1, f);
+
+    t_bmp_info info;
+    info.size = INFO_SIZE;
+    info.width = img->width;
+    info.height = img->height;
+    info.planes = 1;
+    info.bits = 24;
+    info.compression = 0;
+    info.imagesize = imageSize;
+    info.xresolution = 0x0B13;
+    info.yresolution = 0x0B13;
+    info.ncolors = 0;
+    info.importantcolors = 0;
+
+    fwrite(&info, sizeof(t_bmp_info), 1, f);
+
+    bmp24_writePixelData(img, f);
+
+    fclose(f);
+}
 // Filtre que l'on peut appliquer à une image
 
 void bmp24_negative(t_bmp24 *img) {  //Inverser les couleurs de l'image
@@ -271,7 +275,6 @@ t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int ker
     final.green = (uint8_t) green;
     final.blue = (uint8_t) blue;
 
-    printf("Convolution appliquee avec succes\n");
     return final;
 }
 
@@ -467,7 +470,7 @@ void bmp24_emboss (t_bmp24 * img) {  // Relief
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp_24_sharpen (t_bmp24 * img) {  //Netteté
+void bmp24_sharpen (t_bmp24 * img) {  //Netteté
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
