@@ -21,5 +21,7 @@
 // Constantes pour les valeurs de profondeur de couleur
 #define DEFAULT_DEPTH 0x18 // 24
 
+# define CHEMIN_IMG "../images/"
+
 
 #endif //BMP_CONSTANT_H

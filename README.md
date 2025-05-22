@@ -59,3 +59,9 @@ Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc 
 02/05/2025 - MARQUES Noémie : Essai de résolution du problème et création de la branche *master*
 
 08/05/2025 - BREMAND Flavie : A cause de problèmes persistants dûs à la configuration de CLion (sans solutions trouvées par nos professeurs de TD et le coordinateur du module), nouveau projet créé en copiant tous les fichiers et nouveau lien GitHub créé
+
+12/05/2025 - BREMAND Flavie : Ecriture de phrases de debug pour trouver le problème
+
+20/05/2025 - BREMAND Flavie : Tests de bmp8 (liés aux images en gris) fructueux, partie 3 finalisée, *main* complété avec les fonctions de bmp24 (couleurs), tests bmp24 échoués...
+
+22/05/2025 - BREMAND Flavie : Isolation des problèmes pour bmp24 (*saveImage* et *convolution*), améliorations dans le *main*
