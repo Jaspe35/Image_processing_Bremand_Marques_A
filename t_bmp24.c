@@ -1,4 +1,4 @@
-// Fichier .c : Déclaratin des fonctions de la 2e partie
+// Fichier .c : Déclaration des fonctions de la 2e partie
 // Auteures : Noémie MARQUES (2.4 et 2.6) et Flavie BREMAND (2.3 et 2.5)
 
 
@@ -8,7 +8,8 @@
 #include "bmp_constant.h"
 
 
-t_pixel **bmp24_allocateDataPixels(int width, int height) {
+t_pixel **bmp24_allocateDataPixels(int width, int height)  // allocation mémoire des pixels
+{
     t_pixel **pixels = malloc(height * sizeof(t_pixel *));
     if (pixels == NULL) {
         printf("Erreur d'allocation memoire pour les lignes.\n");
@@ -29,7 +30,7 @@ t_pixel **bmp24_allocateDataPixels(int width, int height) {
     return pixels;
 }
 
-void bmp24_freeDataPixels(t_pixel **pixels, int height) {
+void bmp24_freeDataPixels(t_pixel **pixels, int height) {  // Libération de la mémoire allouer au pixel
     if (pixels == NULL){ // Si la matrice est NULL de base
       return;
     }
@@ -40,7 +41,7 @@ void bmp24_freeDataPixels(t_pixel **pixels, int height) {
     free(pixels);
 }
 
-t_bmp24 *bmp24_allocate(int width, int height, int colorDepth) {
+t_bmp24 *bmp24_allocate(int width, int height, int colorDepth) {  // allocation mémoire de l'image
     t_bmp24 *img = malloc(sizeof(t_bmp24));
     if (img == NULL) {
         printf("Erreur d'allocation memoire pour l'image.\n");
@@ -59,7 +60,7 @@ t_bmp24 *bmp24_allocate(int width, int height, int colorDepth) {
     return img;
 }
 
-void bmp24_free(t_bmp24 *img) {
+void bmp24_free(t_bmp24 *img) {  // libération mémoire de l'image
     if (img == NULL) {
       return;
     }
@@ -69,23 +70,21 @@ void bmp24_free(t_bmp24 *img) {
 }
 
 
-void file_rawRead (uint32_t position, void * buffer, uint32_t size, size_t n, FILE * file) {
+void file_rawRead (uint32_t position, void * buffer, uint32_t size, size_t n, FILE * file) { // fonction donnée
     fseek(file, (long) position, SEEK_SET);
     fread(buffer, size, n, file);
 }
 
-void file_rawWrite (uint32_t position, void * buffer, uint32_t size, size_t n, FILE * file) {
+void file_rawWrite (uint32_t position, void * buffer, uint32_t size, size_t n, FILE * file) { // fonction donnée
   fseek(file, (long)position, SEEK_SET);
   fwrite(buffer, size, n, file);
 }
 
-void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) {
+void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) { // lecture d'un pixel
 	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
   		printf("Coordonnees de pixel hors limites.\n");
     	return;
 	}
-
-
     // Calcul de la position du pixel dans le fichier BMP
     // BITMAP_OFFSET : défini à 10, indique où commencent les données d’image
     // lignes sont stockées de bas en haut (donc à l'envers), et chaque pixel prend 3 octets (B, G, R) d'où le *3
@@ -99,7 +98,7 @@ void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 
 }
 
-void bmp24_readPixelData (t_bmp24 * image, FILE * file) {
+void bmp24_readPixelData (t_bmp24 * image, FILE * file) { //lecture des pixels de l'image
     for (int y = image->height - 1; y >= 0; y--) {
         for (int x = 0; x < image->width; x++) {
             bmp24_readPixelValue(image, x, y, file);
@@ -108,7 +107,7 @@ void bmp24_readPixelData (t_bmp24 * image, FILE * file) {
 
 }
 
-void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
+void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {  // écriture d'un pixel
     if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
         printf("Coordonnees de pixel hors limites.\n");
     	return;
@@ -125,22 +124,16 @@ void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
 
 }
 
-void bmp24_writePixelData (t_bmp24 * image, FILE * file) {
-
-    int padding = (4 - (image->width * 3) % 4) % 4;
+void bmp24_writePixelData (t_bmp24 * image, FILE * file) {  // écriture des pixels
 
     for (int y = image->height - 1; y >= 0; y--) {
         for (int x = 0; x < image->width; x++) {
             bmp24_writePixelValue(image, x, y, file);
         }
-        // Ajouter des octets de padding à la fin de chaque ligne
-        for (int p = 0; p < padding; p++) {
-            fputc(0, file);
-        }
     }
 }
 
-t_bmp24 * bmp24_loadImage (const char * filename){
+t_bmp24 * bmp24_loadImage (const char * filename){  // chargement de l'image
     FILE * file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Erreur : impossible d’ouvrir le fichier.\n");
@@ -166,15 +159,8 @@ t_bmp24 * bmp24_loadImage (const char * filename){
     return image;
 }
 
-void bmp24_saveImage (t_bmp24 * img, const char * newname) {
+void bmp24_saveImage (t_bmp24 * img, const char * newname) {  // sauvegarde de l'image
     FILE * file = fopen(newname, "wb");
-
-    // Recalculer la taille de l'image
-    uint32_t imageSize = img->width * img->height * 3;
-    img->header.size = HEADER_SIZE + INFO_SIZE + imageSize;
-    img->header.offset = HEADER_SIZE + INFO_SIZE;
-    img->header_info.size = INFO_SIZE;
-    img->header_info.imagesize = imageSize;
 
     file_rawWrite(54, &img->header, HEADER_SIZE, 1, file);
     file_rawWrite(HEADER_SIZE, &img->header_info, INFO_SIZE, 1, file);
@@ -191,7 +177,9 @@ void bmp24_saveImage (t_bmp24 * img, const char * newname) {
     printf("Charger avec succes !\n");
 }
 
-void bmp24_negative(t_bmp24 *img) {
+// Filtre que l'on peut appliquer à une image
+
+void bmp24_negative(t_bmp24 *img) {  //Inverser les couleurs de l'image
     for (int i = 0; i < img->height; i++) {
         for (int j = 0; j < img->width; j++) {
             img->data[i][j].red   = 255 - img->data[i][j].red;
@@ -237,7 +225,7 @@ void bmp24_brightness(t_bmp24 *img, int value) {
     printf("Filtre de luminosite applique avec succes !\n");
 }
 
-
+// Application des filtres
 t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int kernelSize) {
     float red = 0, green = 0, blue = 0 ;
 
@@ -278,7 +266,7 @@ t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int ker
     return final;
 }
 
-void bmp24_boxBlur(t_bmp24 *img) {
+void bmp24_boxBlur(t_bmp24 *img) {  //Flou
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -326,7 +314,7 @@ void bmp24_boxBlur(t_bmp24 *img) {
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_gaussianBlur (t_bmp24 * img){
+void bmp24_gaussianBlur (t_bmp24 * img){  // Flou gaussien
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -374,7 +362,7 @@ void bmp24_gaussianBlur (t_bmp24 * img){
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_outline (t_bmp24 * img) {
+void bmp24_outline (t_bmp24 * img) {  // Détection de contours de l'image
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -422,7 +410,7 @@ void bmp24_outline (t_bmp24 * img) {
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_emboss (t_bmp24 * img) {
+void bmp24_emboss (t_bmp24 * img) {  // Relief
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -470,7 +458,7 @@ void bmp24_emboss (t_bmp24 * img) {
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp_24_sharpen (t_bmp24 * img) {
+void bmp_24_sharpen (t_bmp24 * img) {  //Netteté
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -518,8 +506,9 @@ void bmp_24_sharpen (t_bmp24 * img) {
     bmp24_free(temp);
     printf("Filtre applique avec succes !\n");
 }
-
-void bmp24_equalize(t_bmp24 * img) { // Creation de la luminance et calcul de la CDF comme pour les niveaux de gris
+// creation de l'histogarmme
+void bmp24_equalize(t_bmp24 * img) {
+    // Creation de la luminance et calcul de la CDF comme pour les niveaux de gris
     // Allocation un tableau YUV de la luminance
     t_yuv * data = malloc(img->width * img->height * sizeof(t_yuv));
     int hist[256] = {0};
