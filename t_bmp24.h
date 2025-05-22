@@ -9,13 +9,13 @@
 #include <stdint.h>
 #include <stdio.h>
 
-typedef struct {
+typedef struct {  // structure d'un pixel
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
 } t_pixel;
 
-typedef struct {
+typedef struct {  // structure du header
 	uint16_t type;
 	uint32_t size;
 	uint16_t reserved1;
@@ -23,7 +23,7 @@ typedef struct {
 	uint32_t offset;
 } t_bmp_header;
 
-typedef struct {
+typedef struct {  // structure des infos de l'image
 	uint32_t size;
 	int32_t width;
 	int32_t height;
@@ -37,7 +37,7 @@ typedef struct {
 	uint32_t importantcolors;
 } t_bmp_info;
 
-typedef struct {
+typedef struct {  // structure du type de l'image
     t_bmp_header header; // En-tête de l'image
     t_bmp_info header_info; // Infos de l'image
     int width; // Largeur de l'image
@@ -46,7 +46,7 @@ typedef struct {
     t_pixel **data; // Matrice avec les données de l'image
 } t_bmp24;
 
-typedef struct {
+typedef struct {  // convolution pour la luminance
   float Y;
   float U;
   float V;

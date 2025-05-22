@@ -80,7 +80,7 @@ Veuillez choisir une option :
 4. Afficher les informations de l'image
 5. Quitter
 >>> Votre choix : 1
-Chemin du fichier : lena_gray.bmp
+Chemin du fichier : lena_gray .bmp
 Image chargée avec succès !
 
 Veuillez choisir une option :
