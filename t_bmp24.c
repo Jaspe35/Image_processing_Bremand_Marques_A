@@ -85,6 +85,7 @@ void bmp24_readPixelValue (t_bmp24 * image, int x, int y, FILE * file) {
     	return;
 	}
 
+
     // Calcul de la position du pixel dans le fichier BMP
     // BITMAP_OFFSET : défini à 10, indique où commencent les données d’image
     // lignes sont stockées de bas en haut (donc à l'envers), et chaque pixel prend 3 octets (B, G, R) d'où le *3
@@ -108,26 +109,33 @@ void bmp24_readPixelData (t_bmp24 * image, FILE * file) {
 }
 
 void bmp24_writePixelValue (t_bmp24 * image, int x, int y, FILE * file) {
-	if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
-  		printf("Coordonnees de pixel hors limites.\n");
+    if (x < 0 || x >= image->width || y < 0 || y >= image->height) {
+        printf("Coordonnees de pixel hors limites.\n");
     	return;
 	}
 
-  t_pixel pixel = image->data[y][x];
 
-  uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
+    t_pixel pixel = image->data[y][x];
 
-  file_rawWrite(pixelPosition, &pixel.blue, sizeof(uint8_t), 1, file);
-  file_rawWrite(pixelPosition + 1, &pixel.green, sizeof(uint8_t), 1, file);
-  file_rawWrite(pixelPosition + 2, &pixel.red, sizeof(uint8_t), 1, file);
+    uint32_t pixelPosition = BITMAP_OFFSET + ((image->height - y - 1) * image->width + x) * 3;
+
+    file_rawWrite(pixelPosition, &pixel.blue, sizeof(uint8_t), 1, file);
+    file_rawWrite(pixelPosition + 1, &pixel.green, sizeof(uint8_t), 1, file);
+    file_rawWrite(pixelPosition + 2, &pixel.red, sizeof(uint8_t), 1, file);
 
 }
 
 void bmp24_writePixelData (t_bmp24 * image, FILE * file) {
 
+    int padding = (4 - (image->width * 3) % 4) % 4;
+
     for (int y = image->height - 1; y >= 0; y--) {
         for (int x = 0; x < image->width; x++) {
-        bmp24_writePixelValue(image, x, y, file);
+            bmp24_writePixelValue(image, x, y, file);
+        }
+        // Ajouter des octets de padding à la fin de chaque ligne
+        for (int p = 0; p < padding; p++) {
+            fputc(0, file);
         }
     }
 }
@@ -150,7 +158,7 @@ t_bmp24 * bmp24_loadImage (const char * filename){
         return NULL;
     }
     file_rawRead(0, &image->header, HEADER_SIZE, 1, file);
-    file_rawRead(HEADER_SIZE, &image->header_info, sizeof(t_bmp_info), 1, file);
+    file_rawRead(HEADER_SIZE, &image->header_info, INFO_SIZE, 1, file);
 
     bmp24_readPixelData (image, file);
     fclose(file);
@@ -158,61 +166,30 @@ t_bmp24 * bmp24_loadImage (const char * filename){
     return image;
 }
 
-void bmp24_saveImage (t_bmp24 * img, const char * filename) {
-    FILE * file = fopen(filename, "wb");
+void bmp24_saveImage (t_bmp24 * img, const char * newname) {
+    FILE * file = fopen(newname, "wb");
 
-    file_rawWrite(0, &img->header, HEADER_SIZE, 1, file);
+    // Recalculer la taille de l'image
+    uint32_t imageSize = img->width * img->height * 3;
+    img->header.size = HEADER_SIZE + INFO_SIZE + imageSize;
+    img->header.offset = HEADER_SIZE + INFO_SIZE;
+    img->header_info.size = INFO_SIZE;
+    img->header_info.imagesize = imageSize;
+
+    file_rawWrite(54, &img->header, HEADER_SIZE, 1, file);
     file_rawWrite(HEADER_SIZE, &img->header_info, INFO_SIZE, 1, file);
 
 
     bmp24_writePixelData(img, file);
 
     if (file == NULL) {
-        printf("Erreur : impossible d’ouvrir le fichier.\n");
+        printf("Erreur : impossible d ouvrir le fichier.\n");
         return;
     }
 
     fclose(file);
     printf("Charger avec succes !\n");
 }
-
-/*
-// Sauvegarde image BMP 24 bits
-void bmp24_saveImage(t_bmp24 *image, const char *filename) {
-FILE *file = fopen(filename, "wb");
-if (!file) return;
-
-// Recalculer header et info
-uint32_t imageSize = image->width * image->height * 3;
-image->header.size = image->header.offset + imageSize;
-image->info.imageSize = imageSize;
-
-// Écrire header BMP
-file_rawWrite(OFFSET_TYPE,        &image->header.type,       2, 1, file);
-file_rawWrite(OFFSET_FILESIZE,    &image->header.size,       4, 1, file);
-uint32_t reserved = 0;
-file_rawWrite(4, &reserved, 2, 1, file);
-file_rawWrite(6, &reserved, 2, 1, file);
-file_rawWrite(OFFSET_DATA_OFFSET, &image->header.offset,     4, 1, file);
-
-// Écrire BITMAPINFOHEADER
-file_rawWrite(OFFSET_INFO_SIZE,        &image->info.size,        4,1,file);
-file_rawWrite(OFFSET_INFO_WIDTH,       &image->info.width,       4,1,file);
-file_rawWrite(OFFSET_INFO_HEIGHT,      &image->info.height,      4,1,file);
-file_rawWrite(OFFSET_INFO_PLANES,      &image->info.planes,      2,1,file);
-file_rawWrite(OFFSET_INFO_BITS,        &image->info.bits,        2,1,file);
-file_rawWrite(OFFSET_INFO_COMPRESSION, &image->info.compression, 4,1,file);
-file_rawWrite(OFFSET_INFO_IMAGE_SIZE,  &image->info.imageSize,   4,1,file);
-file_rawWrite(38, &image->info.xPixelsPerMeter,4,1,file);
-file_rawWrite(42, &image->info.yPixelsPerMeter,4,1,file);
-file_rawWrite(46, &image->info.colorsUsed,    4,1,file);
-file_rawWrite(50, &image->info.importantColors,4,1,file);
-
-// Écrire pixels
-bmp24_writePixelData(image, file);
-fclose(file);
-}
-*/
 
 void bmp24_negative(t_bmp24 *img) {
     for (int i = 0; i < img->height; i++) {
