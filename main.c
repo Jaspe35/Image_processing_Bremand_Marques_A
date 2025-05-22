@@ -12,6 +12,9 @@
 
 // C:/Users/noemi/CLionProjects/projet_final/images/lena_color.bmp
 // C:/Users/noemi/CLionProjects/projet_final/images/flowers_color.bmp
+// C:/Users/Dell/Desktop/images/lena_gray.bmp
+// C:/Users/Dell/Desktop/images/lena_color.bmp
+
 
 int verif_img_null_8(t_bmp8 *image) { // Fonction de vérification: image vide?
     if (image == NULL) {
