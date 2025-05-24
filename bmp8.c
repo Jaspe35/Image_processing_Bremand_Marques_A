@@ -2,17 +2,22 @@
 // Auteures : Noémie MARQUES (N) et Flavie BREMAND (F)
 
 
+#include "bmp8.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
-
-#include "bmp8.h"
+#include "bmp_constant.h"
 
 
 t_bmp8 * bmp8_loadImage(const char * filename) {
-    FILE * file = fopen(filename, "rb");
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, filename);
+    strcat(tmp, EXTENSION_IMG);
+    printf("Chemin : %s\n", tmp);
+
+    FILE * file = fopen(tmp, "rb");
     if (file == NULL) {
         printf("Impossible de charger le fichier : %s\n",filename);
         fclose(file);
@@ -39,6 +44,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     unsigned int height = *(unsigned int*)&header[22];
     unsigned int colorDepth=*(unsigned int*)&header[28];
     unsigned int dataSize = *(unsigned int*)&header[34];
+    printf("recup infos");
 
     // Allocation de l'image
     t_bmp8 *image = malloc(sizeof(t_bmp8)); // Allocation mémoire
@@ -50,6 +56,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Copie de l'en-tête dans l'image
     memcpy(image->header, header, 54);
+    printf("copie entete");
 
     // Lecture de la table des couleurs
     if (fread(image->colorTable, sizeof(unsigned char), 1024, file) != 1024){
@@ -58,7 +65,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         fclose(file);
         return NULL;
     }
-
+    printf("deb 0  ");
     // Allocation mémoire pour l'image
     image->data = malloc(dataSize); // pas image->dataSize ici
     image->data = (unsigned char *)malloc(image->dataSize);
@@ -68,7 +75,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         fclose(file);
         return NULL;
     }
-
+    printf("deb 1  ");
     // Lecture des datas
     if (fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize) {
         printf("Donnees non chargees\n");
@@ -76,12 +83,13 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         fclose(file);
         return NULL;
     };
-
+    printf("avant init champs img?");
     // Initialisation des champs de l'image
     image->width = width;
     image->height = height;
     image->colorDepth = colorDepth;
     image->dataSize = dataSize;
+    printf("init champs img");
 
     fclose(file);
     printf("Charger avec succes !\n");
@@ -90,7 +98,12 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
 
 void bmp8_saveImage(const char * filename, t_bmp8 * image) {
-      FILE *file = fopen(filename, "wb"); // Ouvrir le fichier en écriture binaire (car fichier .bmp)
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, filename);
+    strcat(tmp, EXTENSION_IMG);
+    // printf("Chemin : %s\n", tmp);
+
+    FILE *file = fopen(tmp, "wb"); // Ouvrir le fichier en écriture binaire (car fichier .bmp)
       if (file == NULL) {
           printf("Erreur d'ouverture du fichier\n");
           return;
@@ -127,9 +140,11 @@ void bmp8_printInfo(t_bmp8 * img) {
   printf("\tDataSize : %d \n", img->dataSize);
 }
 
+
 void bmp8_free(t_bmp8 * img) {
   free(img);
 }
+
 
 void bmp8_negative(t_bmp8 * img) {
     for (unsigned int i = 0; i < img->height; i++) {
@@ -140,6 +155,7 @@ void bmp8_negative(t_bmp8 * img) {
     }
     printf("Filtre negatif applique avec succes !\n");
 }
+
 
 void bmp8_brightness(t_bmp8 * img, int value) {
     for (unsigned int i = 0; i < img->height; i++) {

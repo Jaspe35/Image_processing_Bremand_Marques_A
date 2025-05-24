@@ -3,8 +3,8 @@
 
 
 #include <stdlib.h>
-
 #include "filters_bmp8.h"
+
 
 float **allocate_kernel(float values[3][3], float factor) { // Fonction pour allouer dynamiquement les tableaux des filtres
     float **kernel = malloc(3 * sizeof(float *));

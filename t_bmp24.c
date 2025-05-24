@@ -80,6 +80,7 @@ void file_rawWrite (uint32_t position, void * buffer, uint32_t size, size_t n, F
   fseek(file, (long)position, SEEK_SET);
   fwrite(buffer, size, n, file);
 }
+
 void bmp24_readPixelValue(t_bmp24 * image, int x, int y, FILE * file) {
     uint8_t colors[3];
     fread(colors, sizeof(uint8_t), 3, file);
@@ -120,7 +121,12 @@ void bmp24_writePixelData(t_bmp24 * image, FILE * file) {
 }
 
 t_bmp24 * bmp24_loadImage(const char * filename) {
-    FILE *f = fopen(filename, "rb");
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, filename);
+    strcat(tmp, EXTENSION_IMG);
+    // printf("Chemin : %s\n", tmp);
+
+    FILE *f = fopen(tmp, "rb");
     if (f == NULL) {
         return NULL;
     }
@@ -148,7 +154,12 @@ t_bmp24 * bmp24_loadImage(const char * filename) {
 }
 
 void bmp24_saveImage(t_bmp24 * img, const char * filename) {
-    FILE *f = fopen(filename, "wb");
+    char tmp[64]=CHEMIN_IMG;
+    strcat(tmp, filename);
+    strcat(tmp, EXTENSION_IMG);
+    // printf("Chemin : %s\n", tmp);
+
+    FILE *f = fopen(tmp, "wb");
     if (f == NULL) {
         return;
     }

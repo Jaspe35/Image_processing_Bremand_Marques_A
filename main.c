@@ -4,15 +4,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "menu.h"
 #include "bmp8.h"
 #include "filters_bmp8.h"
 #include "t_bmp24.h"
 
-// C:/Users/noemi/CLionProjects/projet_final/images/flowers_color.bmp
-// C:/Users/Dell/Desktop/images/lena_gray.bmp
-// C:/Users/Dell/Desktop/images/lena_color.bmp
+
+// lena_gray.bmp
+// lena_color.bmp
+// flowers_color.bmp
 
 
 int verif_img_null_8(t_bmp8 *image) { // Fonction de vérification: image vide?
@@ -44,9 +44,10 @@ int main() {
         switch (option_choisie){
 
             case 1:{ // Ouvrir une image
-                printf("Chemin du fichier : ");
-                scanf(" %s",filename);
+                printf("Nom de l'image : ");
+                scanf("%s",filename);
                 if (type==8) {
+                    printf("debug");
                     image8 = bmp8_loadImage(filename);
                 }
                 else if (type==24) {
@@ -57,18 +58,15 @@ int main() {
 
             case 2:{ // Sauvegarder l'image
                 char * newname = malloc(75*sizeof(char));
-                printf("Chemin/nom de la nouvelle image : ");
-                scanf(" %s",newname);
+                printf("Nom de la nouvelle image : ");
+                scanf("%s",newname);
                 if (type==8) {
                     if (verif_img_null_8(image8)) break;
                     bmp8_saveImage(newname,image8);
                 }
                 else if (type==24) {
-                    printf("debug0");
                     if (verif_img_null_24(image24)) break;
-                    printf("debug1");
                     bmp24_saveImage(image24,newname);
-                    printf("debug2");
                 }
                 break;
             }
@@ -220,7 +218,12 @@ int main() {
                 break;
             }
 
-            case 6:{ // Quitter
+            case 6:{ // Changer le type de l'image (bmp8/bmp24)
+                type = type_img();
+                break;
+            }
+
+            case 7:{ // Quitter
                 image_processing = 0;
                 break;
             }

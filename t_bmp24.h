@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+
 typedef struct {  // structure d'un pixel
 	uint8_t red;
 	uint8_t green;

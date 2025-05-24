@@ -22,6 +22,7 @@
 #define DEFAULT_DEPTH 0x18 // 24
 
 # define CHEMIN_IMG "../images/"
+# define EXTENSION_IMG ".bmp"
 
 
 #endif //BMP_CONSTANT_H

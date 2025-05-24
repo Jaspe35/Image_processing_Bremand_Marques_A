@@ -31,11 +31,12 @@ int menu() {
     printf("\t3. Appliquer un filtre\n");
     printf("\t4. Afficher les informations de l'image (uniquement bmp8)\n");
     printf("\t5. Egalisation d'histogramme\n");
-    printf("\t6. Quitter\n");
+    printf("\t6. Changer le type de l'image (bmp8/bmp24)\n");
+    printf("\t7. Quitter\n");
 
     scanf("%d",&option);
-    while (option<1 || option>6) {
-      printf("Veuillez choisir une option valide (entre 1 et 6) :\n");
+    while (option<1 || option>7) {
+      printf("Veuillez choisir une option valide (entre 1 et 7) :\n");
       scanf("%d",&option);
     }
     printf(">>> Votre choix : %d\n",option);
