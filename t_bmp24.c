@@ -525,20 +525,17 @@ void bmp24_equalize(t_bmp24 * img) {
     t_yuv * data = malloc(img->width * img->height * sizeof(t_yuv));
     int hist[256] = {0};
     int cpt = 0;
-    int cdf[255] = {0};
-    for (int x = 0; x < img->width; x++) {
-        for (int y = 0; y < img->height; y++) {
+    int cdf[256] = {0};
+
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
             float Y = (float) (0.299 * img->data[y][x].red + 0.587 * img->data[y][x].green + 0.114 * img->data[y][x].blue) ;
-            float U = (float) (-0.14713 * img->data[y][x].red - 0.28886 * img->data[y][x].green + 0.436 * img->data[y][x].blue) ;
-            float V = (float) (0.615 * img->data[y][x].red - 0.51499 * img->data[y][x].green - 0.10001 * img->data[y][x].blue) ;
 
             int Y_arrondi = (int) roundf(Y);
             if (Y_arrondi > 255) Y_arrondi = 255;
             if (Y_arrondi < 0) Y_arrondi = 0;
 
             data[cpt].Y = Y;
-            data[cpt].U = U;
-            data[cpt].V = V;
 
             hist[Y_arrondi]++;
             cpt++;
@@ -547,20 +544,20 @@ void bmp24_equalize(t_bmp24 * img) {
 
     // Histogramme cumulé
     cdf[0] = hist[0];
-    for (int x = 1; x < 255; x++) {
+    for (int x = 1; x < 256; x++) {
         cdf[x] = cdf[x-1] + hist[x];
     }
 
     // Recherche du minimum pour faire la formule
     int cdf_min = cdf[0];
-    for (int x = 0; x < 255; x++) {
+    for (int x = 0; x < 256; x++) {
         if (cdf[x] < cdf_min) {
             cdf_min = cdf[x];
         }
     }
 
     int normalisation[256];
-    for (int i = 0; i < 255; i++) {
+    for (int i = 0; i < 256; i++) {
         normalisation[i] = (int) roundf((float)(cdf[i] - cdf_min) / (float)(img->height * img->width - cdf_min) * 255);
         if (normalisation[i] < 0) normalisation[i] = 0;
         if (normalisation[i] > 255) normalisation[i] = 255;
