@@ -66,5 +66,5 @@ Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc 
 
 22/05/2025 - BREMAND Flavie : Isolation des problèmes pour bmp24 (*saveImage* et *convolution*), améliorations dans le *main*
 
-24/05/2025 - BREMAND Flavie : Automatisation de l'écriture des chemins des images, tests bmp24 terminés et fructueux, ajout du fichier .zip pour avoir les commits du dépôt intermédiaire
+24/05/2025 - BREMAND Flavie : Automatisation de l'écriture des chemins des images, tests bmp24 terminés et fructueux, ajout du fichier .zip pour avoir les commits du dépôt intermédiaire, *READ.ME* complété
 
