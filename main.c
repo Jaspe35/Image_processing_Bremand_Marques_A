@@ -10,7 +10,6 @@
 #include "filters_bmp8.h"
 #include "t_bmp24.h"
 
-// C:/Users/noemi/CLionProjects/projet_final/images/lena_color.bmp
 // C:/Users/noemi/CLionProjects/projet_final/images/flowers_color.bmp
 // C:/Users/Dell/Desktop/images/lena_gray.bmp
 // C:/Users/Dell/Desktop/images/lena_color.bmp
