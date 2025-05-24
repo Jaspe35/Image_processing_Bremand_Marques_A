@@ -1,5 +1,6 @@
 // Fichier .h : Déclarations des prototypes des fonctions
 // Auteure : Noémie MARQUES
+// Prototype des fonctions de la première partie, gérant les images sur 8 bits (charger, sauvegarder, appliquer un filtre et calculer l'histogramme d'une image 8 bits)
 
 #ifndef T_BMP8_H
 #define T_BMP8_H

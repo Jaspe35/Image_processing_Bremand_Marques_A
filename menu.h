@@ -1,5 +1,6 @@
 // Fichier .h : Gestion des 2 menus
 // Auteure : Flavie BREMAND
+// Fichier externe au main gérant le menu utilisateur
 
 
 #ifndef MENU_H

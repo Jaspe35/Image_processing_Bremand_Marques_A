@@ -1,9 +1,11 @@
 // Fichier .c : Gestion des 2 menus
 // Auteure : Flavie BREMAND
+// Fichier externe au main gérant le menu utilisateur
 
 
 #include <stdio.h>
 #include "menu.h"
+#include <unistd.h>
 
 int type_img() {
     printf("Veuillez choisir une option :\n");
@@ -15,6 +17,7 @@ int type_img() {
     while (type!=8 && type!=24) {
         printf("Veuillez choisir une option valide (soit 8, soit 24) :\n");
         scanf("%d",&type);
+        sleep(10);
     }
 
     printf(">>> Votre choix : %d\n",type);
@@ -36,8 +39,9 @@ int menu() {
 
     scanf("%d",&option);
     while (option<1 || option>7) {
-      printf("Veuillez choisir une option valide (entre 1 et 7) :\n");
-      scanf("%d",&option);
+        printf("Veuillez choisir une option valide (entre 1 et 7) :\n");
+        scanf("%d",&option);
+        sleep(10);
     }
     printf(">>> Votre choix : %d\n",option);
 

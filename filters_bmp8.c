@@ -1,6 +1,6 @@
 // Fichier .c : Gestion des filtres
 // Auteure : Flavie BREMAND
-
+// Fichier gérant les filtres des images 8 bits, contenant les différents noyaux
 
 #include <stdlib.h>
 #include "filters_bmp8.h"

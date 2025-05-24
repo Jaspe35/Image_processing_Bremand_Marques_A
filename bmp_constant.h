@@ -1,6 +1,5 @@
-//
-// Created by noemi on 11/04/2025.
-//
+// Fichier .H : Stockage des constantes utiles pour le headedr des images étudiées
+// Auteure : MARQUES Noémie
 
 #ifndef BMP_CONSTANT_H
 #define BMP_CONSTANT_H

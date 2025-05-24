@@ -1,6 +1,6 @@
 // Fichier .c : Déclarations des fonctions
 // Auteures : Noémie MARQUES (N) et Flavie BREMAND (F)
-
+// Fichier bmp8.c avec son .h :  Fonctions de la première partie, gérant les images sur 8 bits (charger, sauvegarder, appliquer un filtre et calculer l'histogramme d'une image 8 bits)
 
 #include "bmp8.h"
 #include <stdio.h>
@@ -24,7 +24,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         return NULL;
     }
 
-    // lecture de l'en-tête
+    // lecture de l'en-tête de l'image
     unsigned char header[54];
     if (fread(header, sizeof(unsigned char), 54, file) != 54) {
         printf("Erreur lors de la lecture de l'en-tete\n");
@@ -39,14 +39,13 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         return NULL;
     }
 
-    // Récupération des informations de l'en-tête
+    // Récupération des informations de l'en-tête pour les charger
     unsigned int width = *(unsigned int*)&header[18];
     unsigned int height = *(unsigned int*)&header[22];
     unsigned int colorDepth=*(unsigned int*)&header[28];
     unsigned int dataSize = *(unsigned int*)&header[34];
-    printf("recup infos");
 
-    // Allocation de l'image
+    // Allocation de l'image et de son en-tête
     t_bmp8 *image = malloc(sizeof(t_bmp8)); // Allocation mémoire
     if (image == NULL) {
         printf("Erreur : Allocation memoire impossible\n");
@@ -56,7 +55,6 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Copie de l'en-tête dans l'image
     memcpy(image->header, header, 54);
-    printf("copie entete");
 
     // Lecture de la table des couleurs
     if (fread(image->colorTable, sizeof(unsigned char), 1024, file) != 1024){
@@ -65,8 +63,8 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         fclose(file);
         return NULL;
     }
-    printf("deb 0  ");
-    // Allocation mémoire pour l'image
+
+    // Allocation mémoire pour le contenu de l'image
     image->data = malloc(dataSize); // pas image->dataSize ici
     image->data = (unsigned char *)malloc(image->dataSize);
     if (image->data == NULL) {
@@ -75,15 +73,15 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
         fclose(file);
         return NULL;
     }
-    printf("deb 1  ");
+
     // Lecture des datas
     if (fread(image->data, sizeof(unsigned char), dataSize, file) != dataSize) {
         printf("Donnees non chargees\n");
         free(image);
         fclose(file);
         return NULL;
-    };
-    printf("avant init champs img?");
+    }
+
     // Initialisation des champs de l'image
     image->width = width;
     image->height = height;
@@ -104,45 +102,45 @@ void bmp8_saveImage(const char * filename, t_bmp8 * image) {
     // printf("Chemin : %s\n", tmp);
 
     FILE *file = fopen(tmp, "wb"); // Ouvrir le fichier en écriture binaire (car fichier .bmp)
-      if (file == NULL) {
-          printf("Erreur d'ouverture du fichier\n");
-          return;
-      }
+    if (file == NULL) {
+        printf("Erreur d'ouverture du fichier\n");
+        return;
+    }
 
-      if (fwrite(image->header, sizeof(unsigned char), 54, file) != 54) { // En-tête BMP (54 octets)
-          printf("Erreur d'ecriture de l'en-tete\n");
-          fclose(file);
-          return;
-      }
+    if (fwrite(image->header, sizeof(unsigned char), 54, file) != 54) { // En-tête BMP (54 octets)
+        printf("Erreur d'ecriture de l'en-tete\n");
+        fclose(file);
+        return;
+    }
 
-      if (fwrite(image->colorTable, sizeof(unsigned char), 1024, file) != 1024) { // Table de couleurs (1024 octets)
-          printf("Erreur d'ecriture de la table de couleurs\n");
-          fclose(file);
-          return;
-      }
+    if (fwrite(image->colorTable, sizeof(unsigned char), 1024, file) != 1024) { // Table de couleurs (1024 octets)
+        printf("Erreur d'ecriture de la table de couleurs\n");
+        fclose(file);
+        return;
+    }
 
-      if (fwrite(image->data, sizeof(unsigned char), image->dataSize, file) != image->dataSize) { // Données de l'image (taille du tableau pointé par data)
-          printf("Erreur d'ecriture des donnees de l'image\n");
-          fclose(file);
-          return;
-      }
+    if (fwrite(image->data, sizeof(unsigned char), image->dataSize, file) != image->dataSize) { // Données de l'image (taille du tableau pointé par data)
+        printf("Erreur d'ecriture des donnees de l'image\n");
+        fclose(file);
+        return;
+    }
 
-      fclose(file); // Fermer le fichier
-      printf("Image sauvegardee avec succes dans %s\n", filename);
+    fclose(file); // Fermer le fichier
+    printf("Image sauvegardee avec succes dans %s\n", filename);
 }
 
 
-void bmp8_printInfo(t_bmp8 * img) {
-  printf("Info de l'image chargee : \n");
-  printf("\tWidth : %d \n", img->width);
-  printf("\tHeight : %d \n", img->height);
-  printf("\tColor Depth : %d \n", img->colorDepth);
-  printf("\tDataSize : %d \n", img->dataSize);
+void bmp8_printInfo(t_bmp8 * img) {  // Affichage des caractéristique de l'image
+    printf("Info de l'image chargee : \n");
+    printf("\tWidth : %d \n", img->width);
+    printf("\tHeight : %d \n", img->height);
+    printf("\tColor Depth : %d \n", img->colorDepth);
+    printf("\tDataSize : %d \n", img->dataSize);
 }
 
 
 void bmp8_free(t_bmp8 * img) {
-  free(img);
+    free(img);
 }
 
 
@@ -150,7 +148,7 @@ void bmp8_negative(t_bmp8 * img) {
     for (unsigned int i = 0; i < img->height; i++) {
         for (unsigned int j = 0; j < img->width; j++) {
             unsigned int index = i * img->width + j;   // utilisation de la variable index pour simuler un tableau 2D
-            img->data[index] = 255 - img->data[index];  //(car data est en réalité un tableau 1D)
+            img->data[index] = 255 - img->data[index];  // (car data est en réalité un tableau 1D)
         }
     }
     printf("Filtre negatif applique avec succes !\n");
@@ -176,18 +174,18 @@ void bmp8_brightness(t_bmp8 * img, int value) {
 
 
 void bmp8_threshold(t_bmp8 * img, int threshold) {
-  for (unsigned int i = 0; i < img->height; i++) {
-    for (unsigned int j = 0; j < img->width; j++) {
-      unsigned int index = i * img->width + j;
-      if (img->data[index] >= threshold) {
-        img->data[index] = 255;
-      }
-      else {
-        img->data[index] = 0;
-      }
+    for (unsigned int i = 0; i < img->height; i++) {
+        for (unsigned int j = 0; j < img->width; j++) {
+            unsigned int index = i * img->width + j;
+            if (img->data[index] >= threshold) {
+                img->data[index] = 255;
+            }
+            else {
+                img->data[index] = 0;
+            }
+        }
     }
-  }
-  printf("Filtre de binarisation applique avec succes !\n");
+    printf("Filtre de binarisation applique avec succes !\n");
 }
 
 
@@ -200,6 +198,7 @@ void bmp8_applyFilter(t_bmp8 * img, float **kernel, int kernelSize) {
         printf("Erreur : allocation memoire pour le filtre\n");
         return;
     }
+
     for (unsigned int i = 0; i < img->height; i++) {
         for (unsigned int j = 0; j < img->width; j++) {
             newImg[i * img->width + j] = img->data[i * img->width + j];

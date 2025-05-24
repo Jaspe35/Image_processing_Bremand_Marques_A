@@ -1,5 +1,6 @@
 // Fichier .h : Prototypes et structures de la 2e partie
 // Auteures : Noémie MARQUES (2.4 et 2.6) et Flavie BREMAND (2.3 et 2.5)
+// Prototypes des fonctions de la deuxième partie, gérant les images sur 24 bits (charger, sauvegarder, appliquer un filtre et calculer l'histogramme d'une image 24 bits)
 
 
 #ifndef T_BMP24_H

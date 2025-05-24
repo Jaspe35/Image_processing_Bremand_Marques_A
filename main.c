@@ -40,7 +40,7 @@ int main() {
     t_bmp24 * image24 = NULL;
 
     while (image_processing) {
-        int option_choisie = menu(); // Fonction du menu principal
+        int option_choisie = menu();  // Fonction du menu principal
         switch (option_choisie){
 
             case 1:{ // Ouvrir une image
@@ -228,6 +228,7 @@ int main() {
             }
 
             default : printf("Erreur dans la saisie de l'option choisie\n");
+
         }
 
     }
