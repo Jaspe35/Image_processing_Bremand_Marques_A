@@ -15,7 +15,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     char tmp[64]=CHEMIN_IMG;
     strcat(tmp, filename);
     strcat(tmp, EXTENSION_IMG);
-    printf("Chemin : %s\n", tmp);
+    // printf("Chemin : %s\n", tmp);
 
     FILE * file = fopen(tmp, "rb");
     if (file == NULL) {
