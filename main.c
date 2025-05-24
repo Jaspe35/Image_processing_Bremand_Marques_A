@@ -47,7 +47,6 @@ int main() {
                 printf("Nom de l'image : ");
                 scanf("%s",filename);
                 if (type==8) {
-                    printf("debug");
                     image8 = bmp8_loadImage(filename);
                 }
                 else if (type==24) {

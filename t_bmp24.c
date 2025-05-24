@@ -150,6 +150,7 @@ t_bmp24 * bmp24_loadImage(const char * filename) {
     bmp24_readPixelData(img, f);
 
     fclose(f);
+    printf("Charger avec succes !\n");
     return img;
 }
 
@@ -200,8 +201,11 @@ void bmp24_saveImage(t_bmp24 * img, const char * filename) {
     bmp24_writePixelData(img, f);
 
     fclose(f);
+    printf("Image sauvegardee avec succes dans %s\n", filename);
 }
-// Filtre que l'on peut appliquer à une image
+
+
+// Filtres que l'on peut appliquer à une image :
 
 void bmp24_negative(t_bmp24 *img) {  //Inverser les couleurs de l'image
     for (int i = 0; i < img->height; i++) {
@@ -289,7 +293,7 @@ t_pixel bmp24_convolution (t_bmp24 * img, int x, int y, float ** kernel, int ker
     return final;
 }
 
-void bmp24_boxBlur(t_bmp24 *img) {  //Flou
+void bmp24_boxBlur(t_bmp24 *img) { // Flou
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -337,7 +341,7 @@ void bmp24_boxBlur(t_bmp24 *img) {  //Flou
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_gaussianBlur (t_bmp24 * img){  // Flou gaussien
+void bmp24_gaussianBlur (t_bmp24 * img){ // Flou gaussien
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -385,7 +389,7 @@ void bmp24_gaussianBlur (t_bmp24 * img){  // Flou gaussien
     printf("Filtre applique avec succes !\n");
 }
 
-void bmp24_outline (t_bmp24 * img) {  // Détection de contours de l'image
+void bmp24_outline (t_bmp24 * img) { // Détection des contours de l'image
     int kernelSize = 3;
     int offset = kernelSize / 2;
 
@@ -413,7 +417,7 @@ void bmp24_outline (t_bmp24 * img) {  // Détection de contours de l'image
         return;
     }
 
-    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
+    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y ait pas de bugs
        for (int x = offset; x < img->width - offset; x++) {
             temp->data[y][x] = bmp24_convolution(img, x, y, kernel, kernelSize);
        }
@@ -460,7 +464,7 @@ void bmp24_emboss (t_bmp24 * img) {  // Relief
         return;
     }
 
-    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y est pas de bugs
+    for (int y = offset; y < img->height - offset; y++) { // on s'arrête avant les bords pour qu'il n'y ait pas de bugs
         for (int x = offset; x < img->width - offset; x++) {
             temp->data[y][x] = bmp24_convolution(img, x, y, kernel, kernelSize);
         }
@@ -529,9 +533,10 @@ void bmp24_sharpen (t_bmp24 * img) {  //Netteté
     bmp24_free(temp);
     printf("Filtre applique avec succes !\n");
 }
-// creation de l'histogarmme
+
+// Création de l'histogramme
 void bmp24_equalize(t_bmp24 * img) {
-    // Creation de la luminance et calcul de la CDF comme pour les niveaux de gris
+    // Création de la luminance et calcul de la CDF comme pour les niveaux de gris
     // Allocation un tableau YUV de la luminance
     t_yuv * data = malloc(img->width * img->height * sizeof(t_yuv));
     int hist[256] = {0};
