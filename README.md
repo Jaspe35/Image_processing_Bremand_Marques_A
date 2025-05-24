@@ -65,3 +65,6 @@ Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc 
 20/05/2025 - BREMAND Flavie : Tests de bmp8 (liés aux images en gris) fructueux, partie 3 finalisée, *main* complété avec les fonctions de bmp24 (couleurs), tests bmp24 échoués...
 
 22/05/2025 - BREMAND Flavie : Isolation des problèmes pour bmp24 (*saveImage* et *convolution*), améliorations dans le *main*
+
+24/05/2025 - BREMAND Flavie : Automatisation de l'écriture des chemins des images, tests bmp24 terminés et fructueux, ajout du fichier .zip pour avoir les commits du dépôt intermédiaire
+
