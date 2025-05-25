@@ -35,7 +35,7 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     // Vérification de l'image (8 bits)
     if (header[28] != 8) {
         printf ("L'image n'est pas en niveau de gris\n");
-       fclose(file);
+        fclose(file);
         return NULL;
     }
 
@@ -66,7 +66,6 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
 
     // Allocation mémoire pour le contenu de l'image
     image->data = malloc(dataSize); // pas image->dataSize ici
-    image->data = (unsigned char *)malloc(image->dataSize);
     if (image->data == NULL) {
         printf("Erreur : Pixel non charge\n");
         free(image);
@@ -87,7 +86,6 @@ t_bmp8 * bmp8_loadImage(const char * filename) {
     image->height = height;
     image->colorDepth = colorDepth;
     image->dataSize = dataSize;
-    printf("init champs img");
 
     fclose(file);
     printf("Charger avec succes !\n");
@@ -132,10 +130,10 @@ void bmp8_saveImage(const char * filename, t_bmp8 * image) {
 
 void bmp8_printInfo(t_bmp8 * img) {  // Affichage des caractéristique de l'image
     printf("Info de l'image chargee : \n");
-    printf("\tWidth : %d \n", img->width);
-    printf("\tHeight : %d \n", img->height);
-    printf("\tColor Depth : %d \n", img->colorDepth);
-    printf("\tDataSize : %d \n", img->dataSize);
+    printf("\tLargeur : %d \n", img->width);
+    printf("\tHauteur : %d \n", img->height);
+    printf("\tProfondeur de la couleur : %d \n", img->colorDepth);
+    printf("\tTaille des donnees : %d \n", img->dataSize);
 }
 
 

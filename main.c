@@ -200,7 +200,7 @@ int main() {
                     bmp8_printInfo(image8);
                 }
                 else if (type==24) {
-                    printf("L'affichage des infos d'une image en couleur n'est pas prevue ici.\n");
+                    bmp24_printInfo(image24);
                 }
                 break;
             }

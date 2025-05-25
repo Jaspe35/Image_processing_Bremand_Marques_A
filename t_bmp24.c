@@ -605,3 +605,13 @@ void bmp24_equalize(t_bmp24 * img) {
     free(data);
     printf("Egalisation appliquee avec succes !\n");
 }
+
+void bmp24_printInfo(t_bmp24 * img) {  // Affichage des caractéristique de l'image
+    printf("Info de l'image chargee : \n");
+    printf("\tLargeur : %d \n", img->header_info.width);
+    printf("\tHauteur : %d \n", img->header_info.height);
+    printf("\tTaille : %d \n", img->header_info.size);
+    printf("\tBpp : %d \n", img->header_info.bits);
+    printf("\tTaille des donnees : %d \n", img->header_info.imagesize);
+    printf("\tNombre de couleur : %d \n", img->header_info.ncolors);
+}
