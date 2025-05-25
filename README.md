@@ -72,5 +72,5 @@ Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc 
 
 24/05/2025 - BREMAND Flavie : Automatisation de l'écriture des chemins des images, tests bmp24 terminés et fructueux, ajout du fichier .zip pour avoir les commits du dépôt intermédiaire, *READ.ME* complété
 
-24/05/2025 - MARQUES Noémie : Ajout des commentaires du code et finalisation du *READ.ME* 
+24/05/2025 - MARQUES Noémie : Ajout des commentaires du code, finalisation du *READ.ME* et implémentation de la fonction *printInfobmp_24*
 
