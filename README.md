@@ -58,7 +58,7 @@ Fin de la *Partie 1* (il reste à la tester)
 
 02/05/2025 - MARQUES Noémie : Essai de résolution du problème et création de la branche *master*
 
-05/05/2025 - MARQUES Noémie : Implémentation de la fonction *bmp24_equalise* sans pouvoir la tester
+05/05/2025 - MARQUES Noémie : Implémentation de la fonction *bmp24_equalize* sans pouvoir la tester
 
 08/05/2025 - BREMAND Flavie : A cause de problèmes persistants dûs à la configuration de CLion (sans solutions trouvées par nos professeurs de TD et le coordinateur du module), nouveau projet créé en copiant tous les fichiers et nouveau lien GitHub créé
 
