@@ -200,6 +200,7 @@ int main() {
                     bmp8_printInfo(image8);
                 }
                 else if (type==24) {
+                    if (verif_img_null_24(image24)) break;
                     bmp24_printInfo(image24);
                 }
                 break;
