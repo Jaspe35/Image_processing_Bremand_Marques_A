@@ -10,39 +10,39 @@ Nous avons rencontré quelques problèmes pendant notre projet, nous avons donc 
 
 # Liste des fichiers
 
-*lena_gray.bmp*, *lena_color.bmp*, *barbara_gray.bmp*, *flowers_color.bmp* : Les 4 images du projet pour tester le programme 
+*lena_gray.bmp*, *lena_color.bmp*, *barbara_gray.bmp*, *flowers_color.bmp* : Les 4 images du projet pour tester le programme
 
 *main.c* : Fichier principal de l'exécution du code - BREMAND Flavie
 
 *menu.c* et *menu.h* : Fichiers de gestion des fonctions utiles pour pour le fonctionnement du menu - BREMAND Flavie
 
-*ex_affichage.txt* : Affichage du menu de sélection pour visualiser le fonctionnement des deux menus - BREMAND Flavie
+*ex_affichage.txt* : Affichage du menu de sélection pour visualiser le fonctionnement des menus - BREMAND Flavie
 
-*bmp8.c* et *bmp8.h* : Fichiers contenant la *Partie 1* et la *Partie 3* du projet concernant les images en noir et blanc - BREMAND Flavie et MARQUES Noémie 
+*bmp8.c* et *bmp8.h* : Fichiers contenant la *Partie 1* et la *Partie 3* du projet concernant les images en noir et blanc - BREMAND Flavie et MARQUES Noémie
 
-*filters_bmp8.c* et *filters_bmp8.h" : Fichiers contenant les filtres et leurs noyaux de la *Partie 1* - BREMAND Flavie
+*filters_bmp8.c* et *filters_bmp8.h* : Fichiers contenant les filtres et leurs noyaux de la *Partie 1* - BREMAND Flavie
 
-*bmp_constant.h* : Fichier de constantes pour la *Partie 2* - MARQUES Noémie 
+*bmp_constant.h* : Fichier de constantes pour la *Partie 2* - MARQUES Noémie
 
-*t_bmp24.c* et *t_bmp24.h* : Fichiers contenant la *Partie 2* et la *Partie 3* du projet concernant les images en couleur - BREMAND Flavie et MARQUES Noémie
+*t_bmp24.c* et *t_bmp24.h* : Fichiers contenant la *Partie 2* et la *Partie 3* du projet concernant les images en couleurs - BREMAND Flavie et MARQUES Noémie
 
 
-# Carnet de bord 
+# Carnet de bord
 
 19/03/2025 - BREMAND Flavie : Initial commit
-                              Implémentation des images et création de l'arborescence
-                              Début de *main.c* et des *menu.c* et *menu.h*
+Implémentation des images et création de l'arborescence
+Début de *main.c* et des *menu.c* et *menu.h*
 
 22/03/2025 - MARQUES Noémie : Implémentation de la fonction *loadImage* et *free*
 
-24/03/2025 - BREMAND Flavie : Implémentation de la fonction *saveImage* et finitions de *main.c* 
+24/03/2025 - BREMAND Flavie : Implémentation de la fonction *saveImage* et finitions de *main.c*
 
 13/04/2025 - MARQUES Noémie : Implémentation des types *t_bmp_header*, *t_bmp_info* et *t_pixel*. Puis implémentation des fonctions *loadImage*, *file_rawRead*, *file_rawWrite*
 
 15/04/2025 - MARQUES Noémie : Implémentation des filtres *bmp24_boxBlur*, *gaussianBlur* et outline de la *Partie 2*
 
 18/04/2025 - BREMAND Flavie : Implémentation des filtres *applyFilter* et les noyaux des filtres de la *Partie 1*
-                              Fin de la *Partie 1* (il reste à la tester)
+Fin de la *Partie 1* (il reste à la tester)
 
 19/04/2025 - MARQUES Noémie : Implémentation des filtres *emboss* et *sharpen* de la *Partie 2*
 

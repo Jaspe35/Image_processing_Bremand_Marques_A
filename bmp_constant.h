@@ -1,4 +1,4 @@
-// Fichier .H : Stockage des constantes utiles pour le headedr des images étudiées
+// Fichier .H : Stockage des constantes utiles pour le header des images étudiées
 // Auteure : MARQUES Noémie
 
 #ifndef BMP_CONSTANT_H

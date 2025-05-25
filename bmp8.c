@@ -128,7 +128,7 @@ void bmp8_saveImage(const char * filename, t_bmp8 * image) {
 }
 
 
-void bmp8_printInfo(t_bmp8 * img) {  // Affichage des caractéristique de l'image
+void bmp8_printInfo(t_bmp8 * img) {  // Affichage des caractéristiques de l'image
     printf("Info de l'image chargee : \n");
     printf("\tLargeur : %d \n", img->width);
     printf("\tHauteur : %d \n", img->height);

@@ -1,4 +1,4 @@
-// Fichier .h : Gestion des 2 menus
+// Fichier .h : Gestion des 3 menus
 // Auteure : Flavie BREMAND
 // Fichier externe au main gérant le menu utilisateur
 
