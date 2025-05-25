@@ -2,6 +2,14 @@
 
 Projet C - P1 A - BREMAND Flavie et MARQUES Noémie
 
+Ce projet permet de réaliser plusieurs opérations sur des images *.bmp* en noir et blanc (*bmp8*) et en couleurs (*bmp24*). Grâce à trois menus, et via le *main*, l'utilisateur peut :
+- sélectionner un type d'image entre bmp8 et bmp24,
+- ouvrir une image,
+- la sauvegarder,
+- afficher ses données,
+- lui appliquer un ou plusieurs filtre(s) parmi : Négatif - Luminosité - Binarisation (bmp8)/Conversion en gris (bmp24) - Flou - Flou gaussien - Netteté - Contours - Relief.
+- réaliser une "égalisation d'histogramme", c'est-à-dire ajuster le contraste de l'image.
+
 
 # Remarques
 
